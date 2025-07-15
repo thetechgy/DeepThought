@@ -64,5 +64,10 @@
       </div>
     </div>
   </div>
+  {% if section.extra.updated %}
+  <p class="has-text-grey is-size-6 has-text-centered">
+    <em>Last updated: {{ section.extra.updated | date(format="%B %e, %Y") }}</em>
+  </p>
+  {% endif %}
 </section>
 {% endblock %}
