@@ -118,8 +118,7 @@ You need static site generator (SSG) [Zola](https://www.getzola.org/documentatio
 Follow zola's guide on [installing a theme](https://www.getzola.org/documentation/themes/installing-and-using-themes/).
 Make sure to add `theme = "DeepThought"` to your `config.toml`
 
-**Check zola version (only 0.9.0+)**
-Just to double-check to make sure you have the right version. It is not supported to use this theme with a version under 0.14.1.
+Check your Zola version before building. DeepThought requires Zola 0.22.1 or newer.
 
 <!-- Run Locally -->
 ### :running: Run Locally
@@ -170,6 +169,11 @@ webmanifest = "/icons/site.webmanifest"
 [extra.author]
 name = "DeepThought"
 avatar = "/images/avatar.png"
+avatar_alt = "DeepThought theme logo"
+
+# Choose system, light, or dark. System is the default.
+[extra.theme]
+default = "system"
 
 # Social links
 [extra.social]
@@ -189,9 +193,10 @@ mastodon_username = "<mastadon_username>"
 mastodon_server = "<mastodon_server>" (if not set, defaults to mastodon.social)
 
 
-# To add google analytics
+# Analytics. The Cloudflare token is public, not a secret.
 [extra.analytics]
 google = "<your_gtag>"
+cloudflare_token = "<your_cloudflare_web_analytics_token>"
 
 # To add disqus comments
 [extra.commenting]
@@ -202,6 +207,50 @@ disqus = "<your_disqus_shortname>"
 enabled = true
 access_token = "<your_access_token>"
 ```
+
+Use a public Mapbox token restricted to the production and preview hostnames. Never commit a secret
+token or an unrestricted token with account-management scopes.
+
+Configure Zola 0.22.1 to generate class-based light and dark highlighting and a JSON search index:
+
+```toml
+[markdown]
+lazy_async_image = true
+
+[markdown.highlighting]
+style = "class"
+light_theme = "github-light"
+dark_theme = "github-dark"
+
+[search]
+index_format = "elasticlunr_json"
+```
+
+### Accessible media shortcodes
+
+Media shortcodes require descriptions so their purpose is available without sight or sound:
+
+```markdown
+{{ youtube(id="video_id", title="A tour of the project dashboard") }}
+{{ vimeo(id="video_id", title="Conference presentation about the project") }}
+{% mermaid(alt="Request flow from browser to application server") %}...{% end %}
+{% chart(alt="Monthly signups increased from January through June") %}...{% end %}
+{% galleria(alt="Photographs from the product launch") %}...{% end %}
+{% mapbox(zoom=6, title="Map of regional offices") %}...{% end %}
+{{ responsive_image(path="screenshot.png", alt="Settings page with dark mode selected") }}
+```
+
+`responsive_image` generates hashed AVIF/WebP sources up to 480px and 960px wide without
+upscaling, with dimensions, lazy loading, and an optional `caption`. Gallery image data must also
+include an `alt`, `description`, or `title` for every image.
+
+When migrating existing content:
+
+- Add `title` to YouTube and Vimeo calls.
+- Add `alt` to chart, Mermaid, and gallery calls.
+- Add `title` to Mapbox calls.
+- Start article content headings at level two because the page template supplies the level-one
+  heading.
 
 #### Multilingual Navbar
 

@@ -1,1 +1,6 @@
-<div class="mermaid is-flex is-justify-content-center is-align-items-center">{{body}}</div>
+<figure class="extended-visual">
+  <div class="mermaid" role="img" aria-label="{{ alt }}" data-diagram="{{ body }}"></div>
+  {% if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {% endif %}
+</figure>

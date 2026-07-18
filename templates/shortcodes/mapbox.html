@@ -1,11 +1,9 @@
-<div class="map mb-6" style='height: 450px;'>
-    <div class="mapbox-access-token">
-        {{config.extra.mapbox.access_token}}
-    </div>
-    <div class="mapbox-zoom">
-        {{zoom}}
-    </div>
-     <div class="mapbox-geojson">
-        {{body}}
-    </div>
-</div>
+<figure class="extended-visual">
+  <div class="map" role="region" aria-label="{{ title }}"
+    data-mapbox-token="{{ config.extra.mapbox.access_token }}"
+    data-zoom="{{ zoom }}"
+    data-geojson="{{ body }}"></div>
+  {% if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {% endif %}
+</figure>

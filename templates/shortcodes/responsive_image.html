@@ -1,0 +1,20 @@
+{% set avif_small = resize_image(path=path, width=480, height=100000, op="fit", format="avif", quality=75) %}
+{% set avif_large = resize_image(path=path, width=960, height=100000, op="fit", format="avif", quality=75) %}
+{% set webp_small = resize_image(path=path, width=480, height=100000, op="fit", format="webp", quality=80) %}
+{% set webp_large = resize_image(path=path, width=960, height=100000, op="fit", format="webp", quality=80) %}
+<figure class="responsive-image">
+  <picture>
+    <source type="image/avif"
+      srcset="{{ avif_small.url }} {{ avif_small.width }}w{% if avif_large.width != avif_small.width %}, {{ avif_large.url }} {{ avif_large.width }}w{% endif %}"
+      sizes="(max-width: {{ avif_large.width }}px) 100vw, {{ avif_large.width }}px" />
+    <source type="image/webp"
+      srcset="{{ webp_small.url }} {{ webp_small.width }}w{% if webp_large.width != webp_small.width %}, {{ webp_large.url }} {{ webp_large.width }}w{% endif %}"
+      sizes="(max-width: {{ webp_large.width }}px) 100vw, {{ webp_large.width }}px" />
+    <img src="{{ webp_large.url }}" alt="{{ alt }}"
+      width="{{ webp_large.width }}" height="{{ webp_large.height }}"
+      loading="lazy" decoding="async" />
+  </picture>
+  {% if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {% endif %}
+</figure>

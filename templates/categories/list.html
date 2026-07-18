@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
+{% block title %}Categories | {{ config.title }}{% endblock title %}
+{% block description %}Browse all categories on {{ config.title }}.{% endblock description %}
+{% block og_title %}Categories | {{ config.title }}{% endblock og_title %}
+{% block og_description %}Browse all categories on {{ config.title }}.{% endblock og_description %}
+
 {% block content %}
 <section class="section">
   <div class="container">
     <div class="has-text-centered">
       <h1 class="title is-2">
         <span class="icon">
-          <i class="fas fa-cubes"></i>
+          {{ macros::icon(name="category") }}
         </span>
         Categories
       </h1>
@@ -15,7 +20,7 @@
         {% for category in terms %}
         <a href="{{ get_taxonomy_url(kind='categories', name=category.name) }}" class="mr-4">
           <span class="icon">
-            <i class="fas fa-cube"></i>
+            {{ macros::icon(name="category") }}
           </span>
           <span>{{category.name}} <sup>{{ category.pages | length }}</sup></span>
         </a>

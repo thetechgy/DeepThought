@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block title %}Posts tagged {{ term.name }} | {{ config.title }}{% endblock title %}
+{% block description %}Browse posts tagged {{ term.name }} on {{ config.title }}.{% endblock description %}
+{% block og_title %}Posts tagged {{ term.name }} | {{ config.title }}{% endblock og_title %}
+{% block og_description %}Browse posts tagged {{ term.name }} on {{ config.title }}.{% endblock og_description %}
+
 {% block header %}
 <header class='hero'>
   <div class='hero-body pb-0'>
@@ -8,7 +13,7 @@
         <h1 class="title">
           <span class="icon-text">
             <span class="icon">
-              <i class="fas fa-tag"></i>
+              {{ macros::icon(name="tag") }}
             </span>
             <span>{{ term.name }}</span>
           </span>
@@ -47,12 +52,14 @@
             </div>
           </div>
           <div class="content mt-2">
-            {{ page.summary | safe }}
+            {% if page.summary %}
+            {{ page.summary | replace(from="<h1", to="<h3") | replace(from="</h1>", to="</h3>") | safe }}
+            {% else %}
+            <p>{{ page.description }}</p>
+            {% endif %}
             <a href='{{ page.permalink }}'>
-              Read More
-              <span class="icon is-small">
-                <i class="fas fa-arrow-right fa-xs"></i>
-              </span>
+              Read {{ page.title }}
+              {{ macros::icon(name="arrow-right", class="is-small") }}
             </a>
           </div>
           <div class="columns">

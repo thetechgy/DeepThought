@@ -29,7 +29,7 @@ To put a flowchart in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
 graph TD;
     A-->B;
     A-->C;
@@ -39,7 +39,7 @@ graph TD;
 ```
 
 **Output**
-{% mermaid() %}
+{% mermaid(alt="Example Mermaid diagram") %}
 graph TD;
 A-->B;
 A-->C;
@@ -54,7 +54,7 @@ To put a sequence diagram in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
 sequenceDiagram
   participant Alice
   participant Bob
@@ -70,7 +70,7 @@ sequenceDiagram
 ```
 
 **Output**
-{% mermaid() %}
+{% mermaid(alt="Example Mermaid diagram") %}
 sequenceDiagram
   participant Alice
   participant Bob
@@ -91,7 +91,7 @@ To put a gantt diagram in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
 gantt
   dateFormat YYYY-MM-DD
   title Adding GANTT diagram to mermaid
@@ -107,7 +107,7 @@ gantt
 
 **Output**
 
-{% mermaid() %}
+{% mermaid(alt="Example Mermaid diagram") %}
 gantt
   dateFormat YYYY-MM-DD
   title Adding GANTT diagram to mermaid
@@ -127,7 +127,7 @@ To put a class diagram in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
 classDiagram
   Class01 <|-- AveryLongClass : Cool
   Class03 _-- Class04
@@ -146,7 +146,7 @@ classDiagram
 ```
 
 **Output**
-{% mermaid() %}
+{% mermaid(alt="Example Mermaid diagram") %}
 classDiagram
   Class01 <|-- AveryLongClass : Cool
   Class03 _-- Class04
@@ -169,7 +169,7 @@ To put an ER diagram in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
 erDiagram
     CUSTOMER ||--o{ ORDER : places
     ORDER ||--|{ LINE-ITEM : contains
@@ -178,7 +178,7 @@ erDiagram
 ```
 
 **Output**
-{% mermaid() %}
+{% mermaid(alt="Example Mermaid diagram") %}
 erDiagram
     CUSTOMER ||--o{ ORDER : places
     ORDER ||--|{ LINE-ITEM : contains
@@ -191,7 +191,7 @@ To put an user journey diagram in your post use below snippet
 **Code**
 
 ```
-{%/* mermaid() */%}
+{%/* mermaid(alt="Example Mermaid diagram") */%}
   journey
   title My working day
   section Go to work
@@ -205,7 +205,7 @@ To put an user journey diagram in your post use below snippet
 ```
 
 **Output**
-{% mermaid () %}
+{% mermaid(alt="Example Mermaid user journey diagram") %}
 journey
   title My working day
   section Go to work
@@ -224,7 +224,7 @@ journey
 **Code**
 
 ```
-{%/* mapbox(zoom=6) */%}
+{%/* mapbox(zoom=6, title="Map of sample locations") */%}
 {
   "type": "FeatureCollection",
   "features": [
@@ -256,7 +256,7 @@ journey
 ```
 
 **Output**
-{% mapbox(zoom=6) %}
+{% mapbox(zoom=6, title="Map of sample locations") %}
 {
   "type": "FeatureCollection",
   "features": [
@@ -297,7 +297,7 @@ Line chart displays series of data points in the form of lines. It can be used t
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "Line",
   "title": "Monthly income of an indie developer",
@@ -322,7 +322,7 @@ Line chart displays series of data points in the form of lines. It can be used t
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "Line",
   "title": "Monthly income of an indie developer",
@@ -352,7 +352,7 @@ XY chart is used to plot points by specifying their XY coordinates.
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "XY",
   "title": "Pokemon farms",
@@ -417,7 +417,7 @@ XY chart is used to plot points by specifying their XY coordinates.
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "XY",
   "title": "Pokemon farms",
@@ -488,7 +488,7 @@ A bar chart provides a way of showing data values represented as vertical bars
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "Bar",
   "title": "How to feel powerful ?",
@@ -512,7 +512,7 @@ A bar chart provides a way of showing data values represented as vertical bars
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "Bar",
   "title": "How to feel powerful ?",
@@ -542,7 +542,7 @@ A stacked bar chart provides a way of showing data values represented as vertica
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "StackedBar",
   "title": "Issues and PR Submissions",
@@ -571,7 +571,7 @@ A stacked bar chart provides a way of showing data values represented as vertica
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "StackedBar",
   "title": "Issues and PR Submissions",
@@ -606,7 +606,7 @@ A pie/doughnut chart provides a way of illustrating numerical proportion.
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "Pie",
   "title": "What Tim is made of",
@@ -624,7 +624,7 @@ A pie/doughnut chart provides a way of illustrating numerical proportion.
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "Pie",
   "title": "What Tim is made of",
@@ -646,7 +646,7 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
 **Code**
 
 ```
-{%/* chart() */%}
+{%/* chart(alt="Example chart") */%}
 {
   "type": "Radar",
   "title": "Letters in random words",
@@ -673,7 +673,7 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
 
 **Output**
 
-{% chart() %}
+{% chart(alt="Example chart") %}
 {
   "type": "Radar",
   "title": "Letters in random words",
@@ -704,7 +704,7 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
 **Code**
 
 ```
-{%/* galleria() */%}
+{%/* galleria(alt="Example image gallery") */%}
 {
   "images": [
     {
@@ -754,7 +754,7 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
 
 **Output**
 
-{% galleria() %}
+{% galleria(alt="Example image gallery") %}
 {
   "images": [
     {

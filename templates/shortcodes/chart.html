@@ -1,1 +1,6 @@
-<svg class="chart">{{body | safe}}</svg>
+<figure class="extended-visual">
+  <svg class="chart" role="img" aria-label="{{ alt }}" data-chart="{{ body }}"></svg>
+  {% if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {% endif %}
+</figure>
