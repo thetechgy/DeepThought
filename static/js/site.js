@@ -397,7 +397,7 @@
           var picture = document.createElement("img");
           link.href = image.src;
           picture.src = image.src;
-          picture.alt = image.alt || image.description || image.title;
+          picture.alt = image.alt || image.description || image.title || "";
           picture.loading = "lazy";
           picture.decoding = "async";
           picture.dataset.title = image.title || "";

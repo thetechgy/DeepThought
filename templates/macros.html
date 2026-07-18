@@ -4,8 +4,8 @@
 </svg>
 {% endmacro %}
 
-{% macro social_link(url, label, mark, class="") %}
-<a class="social-link {{ class }}" href="{{ url }}" target="_blank" rel="noopener noreferrer"
+{% macro social_link(url, label, mark, class="", rel="noopener noreferrer") %}
+<a class="social-link {{ class }}" href="{{ url }}" target="_blank" rel="{{ rel }}"
   title="{{ label }}">
   <span class="social-link__mark" aria-hidden="true">{{ mark }}</span>
   <span class="visually-hidden">{{ label }} (opens in a new tab)</span>
@@ -63,7 +63,7 @@
   {% endif %}
   {% if mastodon_username %}
   {% set mastodon_server = social_config.mastodon_server | default(value="mastodon.social") %}
-  {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", mark="M") }}
+  {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", mark="M", rel="me noopener noreferrer") }}
   {% endif %}
   {% if social_config.github %}
   {{ self::social_link(url="https://github.com/" ~ social_config.github, label="GitHub", mark="GH") }}

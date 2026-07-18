@@ -49,6 +49,7 @@ test("images and new-tab links expose complete accessible contracts", async ({ p
     await expect(link).toHaveAttribute("rel", /noopener/);
     await expect(link).toHaveAttribute("rel", /noreferrer/);
   }
+  await expect(page.locator('a[title="Mastodon"]')).toHaveAttribute("rel", /\bme\b/);
 });
 
 test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {
@@ -78,15 +79,26 @@ test("gallery images expose accessible names and intrinsic dimensions", async ({
   await page.addInitScript(() => {
     window.Galleria = { run() {} };
   });
+  await page.route(/\/docs\/extended-shortcodes\/$/, async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    const fixture = '<div class="galleria" data-test-gallery="missing-alt" ' +
+      'data-images="{&quot;images&quot;:[{&quot;src&quot;:&quot;/icons/favicon-32x32.png&quot;}]}"></div>';
+    await route.fulfill({
+      body: body.replace("</body>", fixture + "</body>"),
+      response
+    });
+  });
   await page.goto("/docs/extended-shortcodes/");
 
-  const images = page.locator(".galleria img");
+  const images = page.locator(".extended-visual .galleria img");
   await expect(images).toHaveCount(8);
   for (const image of await images.all()) {
     await expect(image).toHaveAttribute("alt", /\S+/);
     await expect(image).toHaveAttribute("width", /^[1-9]\d*$/);
     await expect(image).toHaveAttribute("height", /^[1-9]\d*$/);
   }
+  await expect(page.locator('[data-test-gallery="missing-alt"] img')).toHaveAttribute("alt", "");
   expect(pageErrors).toEqual([]);
 });
 
