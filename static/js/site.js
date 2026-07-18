@@ -358,13 +358,13 @@
   }
 
   function initializeMermaid() {
-    if (typeof mermaid === "undefined") {
+    if (!window.mermaid || typeof window.mermaid.initialize !== "function") {
       return;
     }
     document.querySelectorAll(".mermaid[data-diagram]").forEach(function (element) {
       element.textContent = element.dataset.diagram;
     });
-    mermaid.initialize({ startOnLoad: true });
+    window.mermaid.initialize({ startOnLoad: true });
   }
 
   function initializeCharts() {
@@ -385,7 +385,7 @@
   }
 
   function initializeGalleries() {
-    if (typeof Galleria === "undefined") {
+    if (!window.Galleria || typeof window.Galleria.run !== "function") {
       return;
     }
     document.querySelectorAll(".galleria[data-images]").forEach(function (element, index) {
@@ -402,10 +402,17 @@
           picture.decoding = "async";
           picture.dataset.title = image.title || "";
           picture.dataset.description = image.description || "";
+          if (
+            Number.isInteger(image.width) && image.width > 0 &&
+            Number.isInteger(image.height) && image.height > 0
+          ) {
+            picture.width = image.width;
+            picture.height = image.height;
+          }
           link.appendChild(picture);
           element.appendChild(link);
         });
-        Galleria.run("#" + element.id);
+        window.Galleria.run("#" + element.id);
       } catch (error) {
         element.textContent = "Gallery could not be rendered.";
       }
@@ -462,18 +469,18 @@
   }
 
   function initializeMath() {
-    if (typeof katex !== "undefined") {
+    if (window.katex && typeof window.katex.render === "function") {
       document.querySelectorAll(".katex-source[data-katex]").forEach(function (element) {
-        katex.render(element.dataset.katex, element, {
+        window.katex.render(element.dataset.katex, element, {
           displayMode: element.dataset.display === "true",
           throwOnError: false
         });
       });
     }
-    if (typeof renderMathInElement === "undefined") {
+    if (typeof window.renderMathInElement !== "function") {
       return;
     }
-    renderMathInElement(document.body, {
+    window.renderMathInElement(document.body, {
       delimiters: [
         { left: "$$", right: "$$", display: true },
         { left: "$", right: "$", display: false },

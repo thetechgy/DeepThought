@@ -72,6 +72,24 @@ test("generated assets and feeds are served with accurate MIME types", async ({ 
   expect(feedResponse.headers()["content-type"]).toBe("application/xml; charset=utf-8");
 });
 
+test("gallery images expose accessible names and intrinsic dimensions", async ({ page }) => {
+  const pageErrors = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  await page.addInitScript(() => {
+    window.Galleria = { run() {} };
+  });
+  await page.goto("/docs/extended-shortcodes/");
+
+  const images = page.locator(".galleria img");
+  await expect(images).toHaveCount(8);
+  for (const image of await images.all()) {
+    await expect(image).toHaveAttribute("alt", /\S+/);
+    await expect(image).toHaveAttribute("width", /^[1-9]\d*$/);
+    await expect(image).toHaveAttribute("height", /^[1-9]\d*$/);
+  }
+  expect(pageErrors).toEqual([]);
+});
+
 test("the page reflows at 320 CSS pixels with text-spacing overrides", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto("/posts/post-0/");

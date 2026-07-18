@@ -24,7 +24,12 @@ const contentTypes = {
 };
 
 function resolveRequestPath(requestUrl) {
-  const pathname = decodeURIComponent(new URL(requestUrl, "http://localhost").pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(new URL(requestUrl, "http://localhost").pathname);
+  } catch {
+    return null;
+  }
   let candidate = path.resolve(root, "." + pathname);
 
   if (!candidate.startsWith(root + path.sep) && candidate !== root) {

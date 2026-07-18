@@ -242,7 +242,8 @@ Media shortcodes require descriptions so their purpose is available without sigh
 
 `responsive_image` generates hashed AVIF/WebP sources up to 480px and 960px wide without
 upscaling, with dimensions, lazy loading, and an optional `caption`. Gallery image data must also
-include an `alt`, `description`, or `title` for every image.
+include an `alt`, `description`, or `title` for every image. Gallery entries may include paired
+positive-integer `width` and `height` fields to reserve space and prevent layout shift.
 
 When migrating existing content:
 

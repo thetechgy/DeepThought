@@ -1,4 +1,21 @@
+const http = require("node:http");
 const { test, expect } = require("@playwright/test");
+
+function requestRawPath(requestPath) {
+  return new Promise((resolve, reject) => {
+    const rawRequest = http.request({
+      hostname: "127.0.0.1",
+      method: "GET",
+      path: requestPath,
+      port: 4173
+    }, (response) => {
+      response.resume();
+      response.on("end", () => resolve(response.statusCode));
+    });
+    rawRequest.on("error", reject);
+    rawRequest.end();
+  });
+}
 
 async function revealNavigationControls(page) {
   const search = page.locator("#nav-search");
@@ -7,6 +24,13 @@ async function revealNavigationControls(page) {
     await expect(search).toBeVisible();
   }
 }
+
+test("test server rejects malformed paths without terminating", async ({ request }) => {
+  test.skip(Boolean(process.env.PLAYWRIGHT_BASE_URL), "Only applies to the local test server");
+
+  expect(await requestRawPath("/%%")).toBe(404);
+  expect((await request.get("/")).ok()).toBeTruthy();
+});
 
 test("skip link is first and moves focus to main content", async ({ page }) => {
   await page.goto("/");

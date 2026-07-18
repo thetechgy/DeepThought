@@ -709,41 +709,57 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
   "images": [
     {
       "src": "alexandre-dinaut-GHxr3O6yZ1c-unsplash.jpg",
+      "width": 640,
+      "height": 374,
       "title": "Clouds & Mountains",
       "description": "Just hanging out with each other."
     },
     {
       "src": "chandler-cruttenden-YYemke7BfuE-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Crop",
       "description": "Waiting for the harvest."
     },
     {
       "src": "jung-ho-park-7aZtpsyaWVM-unsplash.jpg",
+      "width": 640,
+      "height": 361,
       "title": "The Fog",
       "description": "Engulfing everything."
     },
     {
       "src": "kitera-dent-BIj4LObC6es-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Just Plants",
       "description": "Backdrop of ocean."
     },
     {
       "src": "koes-nadi-XkUFF1nnbA8-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Whoa",
       "description": "Something to look at."
     },
     {
       "src": "lazyartistgallery-HHaIRbgzcGw-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Let's Chill",
       "description": "Three birds just chilling !!"
     },
     {
       "src": "saira-nUxdL_19OQw-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Canyon",
       "description": "Might of nature."
     },
     {
       "src": "waldemar-brandt-2hAEHCt25eM-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Evening",
       "description": "Time to wind down."
     }
@@ -759,41 +775,57 @@ A radar chart provides a way of displaying multivariate data in the form of a tw
   "images": [
     {
       "src": "alexandre-dinaut-GHxr3O6yZ1c-unsplash.jpg",
+      "width": 640,
+      "height": 374,
       "title": "Clouds & Mountains",
       "description": "Just hanging out with each other."
     },
     {
       "src": "chandler-cruttenden-YYemke7BfuE-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Crop",
       "description": "Waiting for the harvest."
     },
     {
       "src": "jung-ho-park-7aZtpsyaWVM-unsplash.jpg",
+      "width": 640,
+      "height": 361,
       "title": "The Fog",
       "description": "Engulfing everything."
     },
     {
       "src": "kitera-dent-BIj4LObC6es-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Just Plants",
       "description": "Backdrop of ocean."
     },
     {
       "src": "koes-nadi-XkUFF1nnbA8-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Whoa",
       "description": "Something to look at."
     },
     {
       "src": "lazyartistgallery-HHaIRbgzcGw-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Let's Chill",
       "description": "Three birds just chilling !!"
     },
     {
       "src": "saira-nUxdL_19OQw-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Canyon",
       "description": "Might of nature."
     },
     {
       "src": "waldemar-brandt-2hAEHCt25eM-unsplash.jpg",
+      "width": 640,
+      "height": 427,
       "title": "Evening",
       "description": "Time to wind down."
     }
