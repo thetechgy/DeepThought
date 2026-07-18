@@ -9,6 +9,10 @@ const routes = [
   { name: "not found", path: "/404.html" }
 ];
 
+function firstSrcsetUrl(srcset) {
+  return srcset.split(",", 1)[0].trim().split(/\s+/, 1)[0];
+}
+
 for (const route of routes) {
   test(route.name + " has no detectable WCAG A or AA violations", async ({ page }) => {
     await page.goto(route.path);
@@ -45,6 +49,27 @@ test("images and new-tab links expose complete accessible contracts", async ({ p
     await expect(link).toHaveAttribute("rel", /noopener/);
     await expect(link).toHaveAttribute("rel", /noreferrer/);
   }
+});
+
+test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {
+  await page.goto("/");
+
+  const imageCases = [
+    { selector: 'source[type="image/avif"]', contentType: "image/avif" },
+    { selector: 'source[type="image/webp"]', contentType: "image/webp" }
+  ];
+
+  for (const imageCase of imageCases) {
+    const srcset = await page.locator(imageCase.selector).first().getAttribute("srcset");
+    const response = await request.get(firstSrcsetUrl(srcset));
+
+    expect(response.ok()).toBeTruthy();
+    expect(response.headers()["content-type"]).toBe(imageCase.contentType);
+  }
+
+  const feedResponse = await request.get("/rss.xml");
+  expect(feedResponse.ok()).toBeTruthy();
+  expect(feedResponse.headers()["content-type"]).toBe("application/xml; charset=utf-8");
 });
 
 test("the page reflows at 320 CSS pixels with text-spacing overrides", async ({ page }) => {

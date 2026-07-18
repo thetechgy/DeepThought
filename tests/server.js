@@ -6,15 +6,21 @@ const zlib = require("node:zlib");
 const root = path.resolve(__dirname, "..", "public");
 const port = Number(process.env.PORT || 4173);
 const contentTypes = {
+  ".avif": "image/avif",
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".ico": "image/x-icon",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
   ".svg": "image/svg+xml",
+  ".txt": "text/plain; charset=utf-8",
   ".webmanifest": "application/manifest+json",
-  ".woff2": "font/woff2"
+  ".webp": "image/webp",
+  ".woff2": "font/woff2",
+  ".xml": "application/xml; charset=utf-8"
 };
 
 function resolveRequestPath(requestUrl) {
@@ -46,7 +52,7 @@ const server = http.createServer((request, response) => {
     "X-Content-Type-Options": "nosniff"
   };
   const source = fs.createReadStream(requestedPath);
-  const compressible = /^(text\/|application\/(json|javascript))/.test(headers["Content-Type"]);
+  const compressible = /^(text\/|application\/(json|javascript|xml))/.test(headers["Content-Type"]);
   if (compressible && /\bgzip\b/.test(request.headers["accept-encoding"] || "")) {
     headers["Content-Encoding"] = "gzip";
     headers.Vary = "Accept-Encoding";
