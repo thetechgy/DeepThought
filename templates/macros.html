@@ -114,7 +114,7 @@
   {% if social_config.youtube %}
   {{ self::social_link(url="https://www.youtube.com/c/" ~ social_config.youtube, label="YouTube", mark="YT") }}
   {% endif %}
-  {% if config.generate_feeds %}
+  {% if config.generate_feeds and config.feed_filenames | length > 0 %}
   {{ self::social_link(url=config.base_url ~ "/" ~ config.feed_filenames[0], label="RSS feed", mark="RSS") }}
   {% endif %}
 </nav>

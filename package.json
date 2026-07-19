@@ -6,7 +6,8 @@
   "scripts": {
     "build": "zola build",
     "build:test": "zola build --base-url http://127.0.0.1:4173",
-    "test": "playwright test",
+    "test": "npm run test:config && playwright test",
+    "test:config": "node --test tests/configuration-check.js",
     "test:a11y": "playwright test tests/accessibility.spec.js",
     "audit": "lhci autorun",
     "validate": "npm run build:test && npm run test && npm run audit"
