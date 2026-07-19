@@ -233,9 +233,11 @@ test("theme toggle publishes its pressed state and survives reload", async ({ pa
   await revealNavigationControls(page);
   const toggle = page.locator("#theme-toggle");
   const initialState = await toggle.getAttribute("aria-pressed");
-  const initialIcon = await toggle.locator("use").getAttribute("href");
 
-  expect(initialIcon).toMatch(initialState === "true" ? /#sun$/ : /#moon$/);
+  await expect(toggle.locator("use")).toHaveAttribute(
+    "href",
+    initialState === "true" ? /#sun$/ : /#moon$/
+  );
 
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", initialState === "true" ? "false" : "true");
