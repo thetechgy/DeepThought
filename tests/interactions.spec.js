@@ -233,9 +233,16 @@ test("theme toggle publishes its pressed state and survives reload", async ({ pa
   await revealNavigationControls(page);
   const toggle = page.locator("#theme-toggle");
   const initialState = await toggle.getAttribute("aria-pressed");
+  const initialIcon = await toggle.locator("use").getAttribute("href");
+
+  expect(initialIcon).toMatch(initialState === "true" ? /#sun$/ : /#moon$/);
 
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", initialState === "true" ? "false" : "true");
+  await expect(toggle.locator("use")).toHaveAttribute(
+    "href",
+    initialState === "true" ? /#moon$/ : /#sun$/
+  );
   const selectedTheme = await page.locator("html").getAttribute("data-theme");
 
   await page.reload();
@@ -244,6 +251,53 @@ test("theme toggle publishes its pressed state and survives reload", async ({ pa
     "aria-pressed",
     selectedTheme === "dark" ? "true" : "false"
   );
+  await expect(page.locator("#theme-toggle use")).toHaveAttribute(
+    "href",
+    selectedTheme === "dark" ? /#sun$/ : /#moon$/
+  );
+});
+
+test("navigation controls and social links keep large targets without visible containers", async ({ page }) => {
+  await page.goto("/");
+  await revealNavigationControls(page);
+
+  for (const selector of ["#nav-search", "#theme-toggle"]) {
+    const control = page.locator(selector);
+    const box = await control.boundingBox();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    await expect(control).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(control.locator(".dt-icon")).toHaveCSS("width", "18px");
+    await expect(control.locator(".dt-icon")).toHaveCSS("height", "18px");
+  }
+
+  const socialLinks = page.locator(".social-link");
+  expect(await socialLinks.count()).toBeGreaterThan(0);
+  for (const socialLink of await socialLinks.all()) {
+    const box = await socialLink.boundingBox();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    await expect(socialLink).toHaveCSS("border-top-width", "0px");
+    await expect(socialLink.locator("svg")).toHaveCount(1);
+  }
+  await expect(page.locator(".social-link__mark")).toHaveCount(0);
+});
+
+test("layout separation uses whitespace instead of full-width rules", async ({ page }) => {
+  await page.goto("/");
+  await page.locator(".content").first().evaluate((content) => {
+    content.insertAdjacentHTML("afterbegin", '<hr data-test-rule="true">');
+  });
+
+  await expect(page.locator(".navbar")).toHaveCSS("border-bottom-width", "0px");
+  await expect(page.locator(".footer")).toHaveCSS("border-top-width", "0px");
+
+  const rules = page.locator('.content hr[data-test-rule="true"]');
+  for (const rule of await rules.all()) {
+    await expect(rule).toHaveCSS("height", "0px");
+    await expect(rule).toHaveCSS("border-top-width", "0px");
+    await expect(rule).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  }
 });
 
 test("forced-colors and reduced-motion preferences retain operable controls", async ({ browser }) => {

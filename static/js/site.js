@@ -22,6 +22,16 @@
     return svg;
   }
 
+  function setIconName(container, name) {
+    var use = container && container.querySelector(".dt-icon use");
+    if (!use) {
+      return;
+    }
+    var currentHref = use.getAttribute("href");
+    var spriteUrl = currentHref ? currentHref.split("#")[0] : "/icons/deep-thought.svg";
+    use.setAttribute("href", spriteUrl + "#" + name);
+  }
+
   function debounceSearch(callback) {
     window.clearTimeout(searchTimer);
     searchTimer = window.setTimeout(callback, SEARCH_DELAY);
@@ -267,6 +277,7 @@
       if (toggle) {
         toggle.setAttribute("aria-pressed", String(dark));
         toggle.setAttribute("aria-label", dark ? "Use light theme" : "Use dark theme");
+        setIconName(toggle, dark ? "sun" : "moon");
       }
     }
 
