@@ -17,13 +17,17 @@
 {% set avatar_avif_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="avif", quality=75) %}
 {% set avatar_webp_192 = resize_image(path=author.avatar, width=192, height=192, op="fill", format="webp", quality=80) %}
 {% set avatar_webp_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="webp", quality=80) %}
+{% set avatar_fallback_192 = resize_image(path=author.avatar, width=192, height=192, op="fill", format="auto", quality=80) %}
+{% set avatar_fallback_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="auto", quality=80) %}
 <figure class="image is-flex is-justify-content-center is-align-items-center">
   <picture>
     <source type="image/avif" srcset="{{ avatar_avif_192.url }} 192w, {{ avatar_avif_384.url }} 384w"
       sizes="192px" />
     <source type="image/webp" srcset="{{ avatar_webp_192.url }} 192w, {{ avatar_webp_384.url }} 384w"
       sizes="192px" />
-    <img class="author-avatar is-rounded" src="{{ avatar_webp_192.url }}"
+    <img class="author-avatar is-rounded" src="{{ avatar_fallback_192.url }}"
+      srcset="{{ avatar_fallback_192.url }} 192w, {{ avatar_fallback_384.url }} 384w"
+      sizes="192px"
       alt="{{ author.avatar_alt | default(value=author.name) }}"
       width="192" height="192" decoding="async" />
   </picture>

@@ -212,14 +212,16 @@
     }
 
     var currentUrl = new URL(window.location.href);
+    var currentPath = currentUrl.pathname.replace(/\/+$/, "") || "/";
     document.querySelectorAll("#navMenu a.navbar-item").forEach(function (link) {
       var linkUrl = new URL(link.href, window.location.href);
-      var isHome = linkUrl.pathname.replace(/\/+$/, "") === "";
+      var linkPath = linkUrl.pathname.replace(/\/+$/, "") || "/";
+      var isHome = linkPath === "/";
       var matches = currentUrl.origin === linkUrl.origin &&
         (isHome
-          ? currentUrl.pathname.replace(/\/+$/, "") === ""
-          : currentUrl.pathname === linkUrl.pathname ||
-            currentUrl.pathname.startsWith(linkUrl.pathname.replace(/\/+$/, "") + "/"));
+          ? currentPath === "/"
+          : currentPath === linkPath ||
+            currentPath.startsWith(linkPath + "/"));
       if (matches) {
         link.classList.add("is-active");
         link.setAttribute("aria-current", "page");

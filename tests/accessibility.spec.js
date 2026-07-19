@@ -73,6 +73,30 @@ test("generated assets and feeds are served with accurate MIME types", async ({ 
   expect(feedResponse.headers()["content-type"]).toBe("application/xml; charset=utf-8");
 });
 
+test("responsive pictures retain portable resized fallbacks", async ({ page, request }) => {
+  const cases = [
+    { path: "/", selector: ".author-avatar" },
+    { path: "/docs/welcome-to-deep-thought/", selector: ".responsive-image img" }
+  ];
+
+  for (const imageCase of cases) {
+    await page.goto(imageCase.path);
+    const image = page.locator(imageCase.selector).first();
+    const picture = image.locator("xpath=ancestor::picture");
+    const src = await image.getAttribute("src");
+    const srcset = await image.getAttribute("srcset");
+
+    expect(src).toMatch(/\.(?:jpe?g|png)$/);
+    expect(srcset).toMatch(/\.(?:jpe?g|png)\s+\d+w/);
+    await expect(picture.locator('source[type="image/avif"]')).toHaveCount(1);
+    await expect(picture.locator('source[type="image/webp"]')).toHaveCount(1);
+
+    const response = await request.get(src);
+    expect(response.ok()).toBeTruthy();
+    expect(response.headers()["content-type"]).toMatch(/^image\/(?:jpeg|png)$/);
+  }
+});
+
 test("gallery images expose accessible names and intrinsic dimensions", async ({ page }) => {
   const pageErrors = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));

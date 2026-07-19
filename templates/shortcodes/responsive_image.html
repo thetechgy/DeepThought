@@ -2,6 +2,8 @@
 {% set avif_large = resize_image(path=path, width=960, height=100000, op="fit", format="avif", quality=75) %}
 {% set webp_small = resize_image(path=path, width=480, height=100000, op="fit", format="webp", quality=80) %}
 {% set webp_large = resize_image(path=path, width=960, height=100000, op="fit", format="webp", quality=80) %}
+{% set fallback_small = resize_image(path=path, width=480, height=100000, op="fit", format="auto", quality=80) %}
+{% set fallback_large = resize_image(path=path, width=960, height=100000, op="fit", format="auto", quality=80) %}
 <figure class="responsive-image">
   <picture>
     <source type="image/avif"
@@ -10,8 +12,11 @@
     <source type="image/webp"
       srcset="{{ webp_small.url }} {{ webp_small.width }}w{% if webp_large.width != webp_small.width %}, {{ webp_large.url }} {{ webp_large.width }}w{% endif %}"
       sizes="(max-width: {{ webp_large.width }}px) 100vw, {{ webp_large.width }}px" />
-    <img src="{{ webp_large.url }}" alt="{{ alt }}"
-      width="{{ webp_large.width }}" height="{{ webp_large.height }}"
+    <img src="{{ fallback_large.url }}"
+      srcset="{{ fallback_small.url }} {{ fallback_small.width }}w{% if fallback_large.width != fallback_small.width %}, {{ fallback_large.url }} {{ fallback_large.width }}w{% endif %}"
+      sizes="(max-width: {{ fallback_large.width }}px) 100vw, {{ fallback_large.width }}px"
+      alt="{{ alt }}"
+      width="{{ fallback_large.width }}" height="{{ fallback_large.height }}"
       loading="lazy" decoding="async" />
   </picture>
   {% if caption %}

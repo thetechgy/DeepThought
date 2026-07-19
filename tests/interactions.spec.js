@@ -54,6 +54,20 @@ test("mobile navigation exposes and updates expanded state", async ({ page }) =>
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
+test("navigation treats trailing-slash variants as the current page", async ({ page }) => {
+  for (const path of ["/tags", "/tags/"]) {
+    await page.goto(path);
+    const tagsLink = page.locator("#navMenu a.navbar-item", { hasText: "Tags" });
+    await tagsLink.evaluate((link) => {
+      link.href = "/tags/";
+      link.classList.remove("is-active");
+      link.removeAttribute("aria-current");
+    });
+    await page.addScriptTag({ url: "/js/site.js?trailing-slash-regression" });
+    await expect(tagsLink).toHaveAttribute("aria-current", "page");
+  }
+});
+
 test("search dialog announces results and restores focus after Escape", async ({ page }) => {
   await page.goto("/");
   await revealNavigationControls(page);
