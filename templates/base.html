@@ -1,9 +1,12 @@
 {% import 'macros.html' as macros %}
 {% set theme_default = config.extra.theme.default | default(value="system") %}
+{% if theme_default != "system" and theme_default != "light" and theme_default != "dark" %}
+  {% set theme_default = "system" %}
+{% endif %}
 {% set canonical_url = current_url | default(value=config.base_url ~ "/404.html") %}
 
 <!DOCTYPE html>
-<html lang="{{ lang }}" data-theme-default="{{ theme_default }}">
+<html lang="{{ lang }}" data-theme-default="{{ theme_default }}"{% if theme_default != "system" %} data-theme="{{ theme_default }}"{% endif %}>
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -51,9 +54,9 @@
   <link href="{{ get_url(path='deep-thought.css') }}" rel="stylesheet" />
   {% if config.markdown.highlighting.style | default(value="inline") == "class" %}
   <link id="giallo-light" href="{{ get_url(path='giallo-light.css') }}" rel="stylesheet"
-    media="(prefers-color-scheme: light)" />
+    media="{% if theme_default == "light" %}all{% elif theme_default == "dark" %}not all{% else %}(prefers-color-scheme: light){% endif %}" />
   <link id="giallo-dark" href="{{ get_url(path='giallo-dark.css') }}" rel="stylesheet"
-    media="(prefers-color-scheme: dark)" />
+    media="{% if theme_default == "dark" %}all{% elif theme_default == "light" %}not all{% else %}(prefers-color-scheme: dark){% endif %}" />
   {% endif %}
   {% if config.extra.galleria.enabled or config.extra.mapbox.enabled or config.extra.mermaid.enabled or config.extra.chart.enabled %}
   <link href="{{ get_url(path='deep-thought-extended.css') }}" rel="stylesheet" />

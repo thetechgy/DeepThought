@@ -63,3 +63,54 @@ test("KaTeX uses the shortcode and auto-render integrations without the legacy s
   assert.match(shortcodePage, /data-katex=/);
   assert.doesNotMatch(shortcodePage, /contrib\/mathtex-script-type\.min\.js/);
 });
+
+test("theme defaults apply before JavaScript and select matching highlighting", (t) => {
+  const cases = [
+    {
+      configured: "light",
+      expectedDefault: "light",
+      expectedTheme: "light",
+      lightMedia: "all",
+      darkMedia: "not all"
+    },
+    {
+      configured: "dark",
+      expectedDefault: "dark",
+      expectedTheme: "dark",
+      lightMedia: "not all",
+      darkMedia: "all"
+    },
+    {
+      configured: "sepia",
+      expectedDefault: "system",
+      expectedTheme: null,
+      lightMedia: "(prefers-color-scheme: light)",
+      darkMedia: "(prefers-color-scheme: dark)"
+    }
+  ];
+
+  for (const themeCase of cases) {
+    const outputPath = buildWithConfig(t, (sourceConfig) => sourceConfig.replace(
+      /^default = "system"$/m,
+      `default = "${themeCase.configured}"`
+    ));
+    const homepage = fs.readFileSync(path.join(outputPath, "index.html"), "utf8");
+    const htmlTag = homepage.match(/<html[^>]*>/)?.[0];
+    const lightMedia = homepage.match(
+      /<link id="giallo-light"[^>]*\bmedia="([^"]+)"/
+    )?.[1];
+    const darkMedia = homepage.match(
+      /<link id="giallo-dark"[^>]*\bmedia="([^"]+)"/
+    )?.[1];
+
+    assert.ok(htmlTag, "generated homepage must include an html element");
+    assert.match(htmlTag, new RegExp(`data-theme-default="${themeCase.expectedDefault}"`));
+    if (themeCase.expectedTheme) {
+      assert.match(htmlTag, new RegExp(` data-theme="${themeCase.expectedTheme}"`));
+    } else {
+      assert.doesNotMatch(htmlTag, / data-theme="/);
+    }
+    assert.equal(lightMedia, themeCase.lightMedia);
+    assert.equal(darkMedia, themeCase.darkMedia);
+  }
+});
