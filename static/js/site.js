@@ -313,7 +313,12 @@
 
     var byId = new Map();
     links.forEach(function (link) {
-      var id = decodeURIComponent(new URL(link.href).hash.slice(1));
+      var id;
+      try {
+        id = decodeURIComponent(new URL(link.href).hash.slice(1));
+      } catch (error) {
+        return;
+      }
       var heading = document.getElementById(id);
       if (heading) {
         byId.set(id, link);

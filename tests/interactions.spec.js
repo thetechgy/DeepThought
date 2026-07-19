@@ -118,6 +118,37 @@ test("comments load only from validated Disqus configuration", async ({ browser 
   await context.close();
 });
 
+test("malformed table-of-contents hashes do not block later initializers", async ({ page }) => {
+  const pageErrors = [];
+  const scopedRequests = [];
+
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  page.on("request", (request) => {
+    if (request.resourceType() === "script" && request.url().startsWith("https://")) {
+      scopedRequests.push(request.url());
+    }
+  });
+  await page.route(/^https:\/\//, (route) => route.abort());
+  await page.route(/\/docs\/extended-shortcodes\/$/, async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    await route.fulfill({
+      body: body.replace(
+        /(<a[^>]+class="toc[^"]*"[^>]+href=")[^"]+(")/,
+        "$1#%$2"
+      ),
+      response
+    });
+  });
+
+  await page.goto("/docs/extended-shortcodes/");
+
+  await expect(page.locator(".toc").first()).toHaveAttribute("href", "#%");
+  expect(pageErrors).toEqual([]);
+  expect(scopedRequests).toEqual(["https://deepthought-theme.disqus.com/embed.js"]);
+  expect(await page.evaluate(() => typeof window.disqus_config)).toBe("function");
+});
+
 test("maps render features without optional GeoJSON properties", async ({ page }) => {
   await page.addInitScript(() => {
     window.__mapPopupContents = [];
