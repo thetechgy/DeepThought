@@ -101,25 +101,53 @@ test("taxonomy headings use plural symbols and taxonomy links use singular symbo
     {
       path: "/categories/",
       headingSymbol: "categories",
-      itemSymbol: "category"
+      itemSymbol: "category",
+      headingAspectRatio: 1.125
     },
     {
       path: "/tags/",
       headingSymbol: "tags",
-      itemSymbol: "tag"
+      itemSymbol: "tag",
+      headingAspectRatio: 1
     }
   ];
 
   for (const taxonomyCase of cases) {
     await page.goto(taxonomyCase.path);
-    await expect(page.locator("h1 use")).toHaveAttribute(
+    const heading = page.locator("h1.taxonomy-title");
+    const itemIcon = page.locator("main p a .dt-icon").first();
+
+    await expect(heading.locator("use")).toHaveAttribute(
       "href",
       new RegExp("#" + taxonomyCase.headingSymbol + "$")
     );
-    await expect(page.locator("main p a use").first()).toHaveAttribute(
+    await expect(itemIcon.locator("use")).toHaveAttribute(
       "href",
       new RegExp("#" + taxonomyCase.itemSymbol + "$")
     );
+
+    const dimensions = await heading.evaluate((headingElement) => {
+      const headingSvg = headingElement.querySelector(".taxonomy-title__icon .dt-icon");
+      const itemSvg = document.querySelector("main p a .dt-icon");
+      const headingBox = headingSvg.getBoundingClientRect();
+      const itemBox = itemSvg.getBoundingClientRect();
+
+      return {
+        fontSize: Number.parseFloat(getComputedStyle(headingElement).fontSize),
+        headingHeight: headingBox.height,
+        headingWidth: headingBox.width,
+        itemHeight: itemBox.height,
+        itemWidth: itemBox.width
+      };
+    });
+
+    expect(dimensions.headingHeight / dimensions.fontSize).toBeCloseTo(1, 2);
+    expect(dimensions.headingWidth / dimensions.fontSize).toBeCloseTo(
+      taxonomyCase.headingAspectRatio,
+      2
+    );
+    expect(dimensions.itemHeight).toBeCloseTo(18, 1);
+    expect(dimensions.itemWidth).toBeCloseTo(18, 1);
   }
 });
 
