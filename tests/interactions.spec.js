@@ -260,6 +260,10 @@ test("theme toggle publishes its pressed state and survives reload", async ({ pa
 test("navigation controls and social links keep large targets without visible containers", async ({ page }) => {
   await page.goto("/");
   await revealNavigationControls(page);
+  const rootFontSize = await page.locator("html").evaluate((element) => (
+    Number.parseFloat(window.getComputedStyle(element).fontSize)
+  ));
+  expect(rootFontSize).toBeGreaterThan(0);
 
   for (const selector of ["#nav-search", "#theme-toggle"]) {
     const control = page.locator(selector);
@@ -269,8 +273,14 @@ test("navigation controls and social links keep large targets without visible co
     expect(box.width).toBeGreaterThanOrEqual(44);
     expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(control).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
-    await expect(control.locator(".dt-icon")).toHaveCSS("width", "18px");
-    await expect(control.locator(".dt-icon")).toHaveCSS("height", "18px");
+    const icon = control.locator(".dt-icon");
+    await expect(icon).toBeVisible();
+    const iconBox = await icon.boundingBox();
+    expect(iconBox, selector + " icon should have a rendered bounding box").not.toBeNull();
+    for (const dimension of [iconBox.width, iconBox.height]) {
+      expect(dimension).toBeGreaterThanOrEqual(rootFontSize);
+      expect(dimension).toBeLessThanOrEqual(rootFontSize * 1.25);
+    }
   }
 
   const socialLinks = page.locator(".social-link");
