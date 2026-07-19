@@ -48,7 +48,8 @@
             <p>{{ page.description }}</p>
             {% endif %}
             <a class="read-more-link has-text-weight-semibold" href='{{ page.permalink }}'>
-              Read {{ page.title }}
+              Read More
+              <span class="visually-hidden"> about {{ page.title }}</span>
               {{ macros::icon(name="arrow-right", class="is-small") }}
             </a>
           </div>

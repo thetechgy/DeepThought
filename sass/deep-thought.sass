@@ -59,6 +59,7 @@ $blue: #005ea8
     --dt-link: #005ea8
     --dt-link-visited: #5a2ca0
     --dt-border: #68727d
+    --dt-divider: #f5f5f5
     --dt-focus: #9c2c87
     --dt-shadow: rgba(10, 10, 10, 0.12)
     --dt-linkedin: #0a66c2
@@ -75,6 +76,7 @@ $blue: #005ea8
     --dt-link: #7cc4ff
     --dt-link-visited: #d1a8ff
     --dt-border: #8b949e
+    --dt-divider: #171717
     --dt-focus: #ffd166
     --dt-shadow: rgba(0, 0, 0, 0.45)
     --dt-linkedin: #70b5f9
@@ -206,10 +208,10 @@ th
     color: var(--dt-text)
 
 .content hr
-    background: transparent
+    background: var(--dt-divider)
     border: 0
-    height: 0
-    margin: 2.5rem 0
+    height: 0.125rem
+    margin: 1.5rem 0
 
 .text-muted,
 .has-text-grey
@@ -421,6 +423,7 @@ svg
         --dt-link: #7cc4ff
         --dt-link-visited: #d1a8ff
         --dt-border: #8b949e
+        --dt-divider: #171717
         --dt-focus: #ffd166
         --dt-shadow: rgba(0, 0, 0, 0.45)
         --dt-linkedin: #70b5f9

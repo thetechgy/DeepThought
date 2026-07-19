@@ -221,7 +221,18 @@ test("search dialog announces results and restores focus after Escape", async ({
 
   await input.fill("DeepThought");
   await expect(page.locator("#search-status")).toContainText(/results? found/);
-  await expect(page.locator("#search-results > li").first()).toBeVisible();
+  const firstResult = page.locator("#search-results > li").first();
+  await expect(firstResult).toBeVisible();
+  const firstResultTitle = (await firstResult.locator("h3").textContent()).trim();
+  const firstResultLink = firstResult.locator(".search-result__link");
+  await expect(firstResultLink).toHaveAccessibleName("Read More about " + firstResultTitle);
+  expect(await firstResultLink.evaluate((link) => (
+    Array.from(link.childNodes)
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent.trim())
+      .filter(Boolean)
+      .join(" ")
+  ))).toBe("Read More");
 
   await page.keyboard.press("Escape");
   await expect(dialog).not.toHaveJSProperty("open", true);
@@ -299,7 +310,7 @@ test("navigation controls and social links keep large targets without visible co
   await expect(page.locator(".social-link__mark")).toHaveCount(0);
 });
 
-test("layout separation uses whitespace instead of full-width rules", async ({ page }) => {
+test("content rules stay faint while shell separation remains borderless", async ({ page }) => {
   await page.goto("/");
   await page.locator(".content").first().evaluate((content) => {
     content.insertAdjacentHTML("afterbegin", '<hr data-test-rule="true">');
@@ -310,9 +321,11 @@ test("layout separation uses whitespace instead of full-width rules", async ({ p
 
   const rules = page.locator('.content hr[data-test-rule="true"]');
   for (const rule of await rules.all()) {
-    await expect(rule).toHaveCSS("height", "0px");
+    await expect(rule).toHaveCSS("height", "2px");
     await expect(rule).toHaveCSS("border-top-width", "0px");
-    await expect(rule).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(rule).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(rule).toHaveCSS("margin-top", "24px");
+    await expect(rule).toHaveCSS("margin-bottom", "24px");
   }
 });
 

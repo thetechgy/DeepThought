@@ -64,6 +64,7 @@
     var titleLink = document.createElement("a");
     var teaser = document.createElement("p");
     var readLink = document.createElement("a");
+    var readContext = document.createElement("span");
 
     article.classList.add("box");
     heading.classList.add("title", "is-5");
@@ -76,7 +77,10 @@
 
     readLink.href = item.ref;
     readLink.classList.add("search-result__link");
-    readLink.appendChild(document.createTextNode("Read " + item.doc.title + " "));
+    readLink.appendChild(document.createTextNode("Read More "));
+    readContext.classList.add("visually-hidden");
+    readContext.textContent = "about " + item.doc.title;
+    readLink.appendChild(readContext);
     readLink.appendChild(createIcon("arrow-right"));
 
     article.appendChild(heading);
