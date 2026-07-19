@@ -96,6 +96,58 @@ test("fonts and icons are self-hosted and social links use recognizable SVG symb
   }
 });
 
+test("taxonomy headings use plural symbols and taxonomy links use singular symbols", async ({ page }) => {
+  const cases = [
+    {
+      path: "/categories/",
+      headingSymbol: "categories",
+      itemSymbol: "category"
+    },
+    {
+      path: "/tags/",
+      headingSymbol: "tags",
+      itemSymbol: "tag"
+    }
+  ];
+
+  for (const taxonomyCase of cases) {
+    await page.goto(taxonomyCase.path);
+    await expect(page.locator("h1 use")).toHaveAttribute(
+      "href",
+      new RegExp("#" + taxonomyCase.headingSymbol + "$")
+    );
+    await expect(page.locator("main p a use").first()).toHaveAttribute(
+      "href",
+      new RegExp("#" + taxonomyCase.itemSymbol + "$")
+    );
+  }
+});
+
+test("article listings keep concise visible labels with descriptive accessible names", async ({ page }) => {
+  const routes = ["/posts/"];
+
+  for (const taxonomyPath of ["/categories/", "/tags/"]) {
+    await page.goto(taxonomyPath);
+    routes.push(await page.locator("main p a").first().getAttribute("href"));
+  }
+
+  for (const route of routes) {
+    await page.goto(route);
+    const article = page.locator("article.box").first();
+    const title = (await article.locator("h2").textContent()).trim();
+    const readMore = article.locator(".read-more-link");
+
+    await expect(readMore).toHaveAccessibleName("Read More about " + title);
+    expect(await readMore.evaluate((link) => (
+      Array.from(link.childNodes)
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
+        .map((node) => node.textContent.trim())
+        .filter(Boolean)
+        .join(" ")
+    ))).toBe("Read More");
+  }
+});
+
 test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {
   await page.goto("/");
 

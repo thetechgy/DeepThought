@@ -57,8 +57,9 @@
             {% else %}
             <p>{{ page.description }}</p>
             {% endif %}
-            <a href='{{ page.permalink }}'>
-              Read {{ page.title }}
+            <a class="read-more-link" href='{{ page.permalink }}'>
+              Read More
+              <span class="visually-hidden"> about {{ page.title }}</span>
               {{ macros::icon(name="arrow-right", class="is-small") }}
             </a>
           </div>
