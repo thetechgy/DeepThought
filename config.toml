@@ -29,12 +29,12 @@ minify_html = false
 ignored_content = []
 
 # When set to "true", a feed is automatically generated.
-generate_feed = true
+generate_feeds = true
 
 # The filename to use for the feed. Used as the template filename, too.
 # Defaults to "atom.xml", which has a built-in template that renders an Atom 1.0 feed.
 # There is also a built-in template "rss.xml" that renders an RSS 2.0 feed.
-feed_filename = "rss.xml"
+feed_filenames = ["rss.xml"]
 
 # The number of articles to include in the feed. All items are included if
 # this limit is not set (the default).
@@ -66,19 +66,12 @@ build_search_index = true
 
 # Configuration of the Markdown rendering
 [markdown]
-# When set to "true", all code blocks are highlighted.
-highlight_code = true
-
-# A list of directories used to search for additional `.sublime-syntax` files.
-extra_syntaxes = []
-
-# The theme to use for code highlighting.
-# See below for list of allowed values.
-highlight_theme = "one-dark"
-
 # When set to "true", emoji aliases translated to their corresponding
 # Unicode emoji equivalent in the rendered Markdown files. (e.g.: :smile: => 😄)
 render_emoji = true
+
+# Add native lazy-loading and asynchronous decoding to Markdown images.
+lazy_async_image = true
 
 # Whether external links are to be opened in a new tab
 # If this is true, a `rel="noopener"` will always automatically be added for security reasons
@@ -122,6 +115,8 @@ include_description = false
 include_path = false
 # Whether to include the rendered content of the page/section in the index
 include_content = true
+# Keep the large index out of the critical path; the theme fetches it when search opens.
+index_format = "elasticlunr_json"
 # At which character to truncate the content to. Useful if you have a lot of pages and the index would
 # become too big to load on the site. Defaults to not being set.
 # truncate_content_length = 100
@@ -137,18 +132,24 @@ include_content = true
 
 # Additional languages definition
 # You can define language specific config values and translations:
-# title, description, generate_feed, feed_filename, taxonomies, build_search_index
+# title, description, generate_feeds, feed_filenames, taxonomies, build_search_index
 # as well as its own search configuration and translations (see above for details on those)
 [languages]
 # For example
 # [languages.fr]
 # title = "Mon blog"
-# generate_feed = true
+# generate_feeds = true
 # taxonomies = [
 #    {name = "auteurs"},
 #    {name = "tags"},
 # ]
 # build_search_index = false
+
+[markdown.highlighting]
+style = "class"
+light_theme = "github-light"
+dark_theme = "github-dark"
+error_on_missing_language = true
 
 # You can put any kind of data here. The data
 # will be accessible in all templates
@@ -159,12 +160,12 @@ include_content = true
 # author value will be available using {{ config.extra.author }} in templates
 #
 [extra]
-katex.enabled = true
+katex.enabled = false
 katex.auto_render = true
 
-chart.enabled = true
-mermaid.enabled = true
-galleria.enabled = true
+chart.enabled = false
+mermaid.enabled = false
+galleria.enabled = false
 
 navbar_items = [
     { code = "en", nav_items = [
@@ -186,6 +187,10 @@ webmanifest = "/icons/site.webmanifest"
 [extra.author]
 name = "DeepThought"
 avatar = "images/avatar.png"
+avatar_alt = "DeepThought theme logo"
+
+[extra.theme]
+default = "system"
 
 [extra.social]
 facebook = "RatanShreshtha"
@@ -214,11 +219,12 @@ orcid = "RatanShreshtha"
 google_scholar = "RatanShreshtha"
 
 [extra.analytics]
-google = "G-JPHGX4YXVE"
+google = ""
+cloudflare_token = ""
 
 [extra.commenting]
 disqus = "deepthought-theme"
 
 [extra.mapbox]
-enabled = true
-access_token = "pk.eyJ1IjoicmF0YW5zaHJlc2h0aGEiLCJhIjoiY2tla2s2NmM3MDd0ZzJzbXFtc3Y2YmU0NyJ9.0RhUnJPKbxHWw3xGPnnBlA"
+enabled = false
+access_token = ""

@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}Page not found | {{ config.title }}{% endblock title %}
+{% block description %}The requested page could not be found on {{ config.title }}.{% endblock description %}
+{% block og_title %}Page not found | {{ config.title }}{% endblock og_title %}
+{% block og_description %}The requested page could not be found on {{ config.title }}.{% endblock og_description %}
 
 {% block content %}
 <section class="section">
@@ -10,15 +14,13 @@
         It seems you are looking for something that I don't have.
       </p>
       {% if config.extra.author.avatar %}
-      <figure class="image is-flex is-justify-content-center is-align-items-center">
-        <img class="is-rounded" src="{{ config.extra.author.avatar }}" style="max-width: 192px" />
-      </figure>
+      {{ macros::author_avatar(author=config.extra.author) }}
       {% endif %}
       {{ macros:: social_links( social_config=config.extra.social) }}
       <p class="my-6">
         <a href='{{ config.base_url }}'>
           <span class="icon">
-            <i class="fas fa-home"></i>
+            {{ macros::icon(name="home") }}
           </span>
           <span>Home</span>
         </a>

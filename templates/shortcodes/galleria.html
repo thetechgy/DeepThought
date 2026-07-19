@@ -1,1 +1,6 @@
-<div class="galleria mb-6" style="height: 450px">{{body | safe}}</div>
+<figure class="extended-visual">
+  <div class="galleria" role="region" aria-label="{{ alt }}" data-images="{{ body }}"></div>
+  {% if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {% endif %}
+</figure>

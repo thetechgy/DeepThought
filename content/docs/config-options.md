@@ -81,6 +81,9 @@ google = "<your_gtag>"
 disqus = "<your_disqus>"
 ```
 
+Use the lowercase DNS label from `https://your-shortname.disqus.com`. The value may contain 1–63
+letters, digits, or internal hyphens; invalid values disable comment loading.
+
 ## External Libraries
 
 ### Mermaid, Chart and Galleria

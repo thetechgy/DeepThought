@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
+{% block title %}Tags | {{ config.title }}{% endblock title %}
+{% block description %}Browse all tags on {{ config.title }}.{% endblock description %}
+{% block og_title %}Tags | {{ config.title }}{% endblock og_title %}
+{% block og_description %}Browse all tags on {{ config.title }}.{% endblock og_description %}
+
 {% block content %}
 <section class="section">
   <div class="container">
     <div class="has-text-centered">
       <h1 class="title is-2">
         <span class="icon">
-          <i class="fas fa-tags"></i>
+          {{ macros::icon(name="tag") }}
         </span>
         Tags
       </h1>
@@ -15,7 +20,7 @@
         {% for tag in terms %}
         <a href="{{ get_taxonomy_url(kind='tags', name=tag.name) }}" class="mr-4">
           <span class="icon">
-            <i class="fas fa-tag"></i>
+            {{ macros::icon(name="tag") }}
           </span>
           <span>{{tag.name}} <sup>{{ tag.pages | length }}</sup></span>
         </a>

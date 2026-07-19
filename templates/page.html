@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ config.title }} | {{ page.title }}
+{{ page.title }} | {{ config.title }}
 {% endblock %}
+{% block description %}{{ page.description | default(value="Read " ~ page.title ~ " on " ~ config.title ~ ".") }}{% endblock description %}
+{% block og_type %}article{% endblock og_type %}
+{% block og_title %}{{ page.title }} | {{ config.title }}{% endblock og_title %}
+{% block og_description %}{{ page.description | default(value="Read " ~ page.title ~ " on " ~ config.title ~ ".") }}{% endblock og_description %}
 
 {% block content %}
 <section class="section">
@@ -33,13 +37,13 @@
             </div>
           </div>
           <div class="content mt-2">
-            {{ page.content | safe }}
+            {{ page.content | replace(from="<h1", to="<h2") | replace(from="</h1>", to="</h2>") | safe }}
           </div>
         </article>
       </div>
       {% if page.extra.toc %}
       <div class="column is-2 is-hidden-mobile">
-        <aside class="menu" style="position: sticky; top: 48px">
+        <aside class="menu table-of-contents" aria-label="Table of contents">
           <p class="heading has-text-weight-bold">Contents</p>
           <ul class="menu-list">
             {% for h1 in page.toc %}
@@ -81,7 +85,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.later.permalink }}">
               <span class="icon mr-2">
-                <i class="fas fa-arrow-circle-left"></i>
+                {{ macros::icon(name="arrow-left") }}
               </span>
               {{ page.later.title }}
             </a>
@@ -90,7 +94,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.earlier.permalink }}">
               {{ page.earlier.title }}<span class="icon ml-2">
-                <i class="fas fa-arrow-circle-right"></i>
+                {{ macros::icon(name="arrow-right") }}
               </span>
             </a>
           </div>
@@ -98,7 +102,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.heavier.permalink }}">
               <span class="icon mr-2">
-                <i class="fas fa-arrow-circle-left"></i>
+                {{ macros::icon(name="arrow-left") }}
               </span>
               {{ page.heavier.title }}
             </a>
@@ -107,7 +111,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.lighter.permalink }}">
               {{ page.lighter.title }}<span class="icon ml-2">
-                <i class="fas fa-arrow-circle-right"></i>
+                {{ macros::icon(name="arrow-right") }}
               </span>
             </a>
           </div>
@@ -115,7 +119,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.higher.permalink }}">
               <span class="icon mr-2">
-                <i class="fas fa-arrow-circle-left"></i>
+                {{ macros::icon(name="arrow-left") }}
               </span>
               {{ page.higher.title }}
             </a>
@@ -124,7 +128,7 @@
           <div class="level-item has-text-centered">
             <a class="button is-black is-outlined" href="{{ page.lower.permalink }}">
               {{ page.lower.title }}<span class="icon ml-2">
-                <i class="fas fa-arrow-circle-right"></i>
+                {{ macros::icon(name="arrow-right") }}
               </span>
             </a>
           </div>
@@ -143,74 +147,13 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-6">
-        <div id="disqus_thread"></div>
+        <div id="disqus_thread"
+          data-disqus-shortname="{{ config.extra.commenting.disqus }}"
+          data-page-url="{{ current_url }}"
+          data-page-identifier="{{ current_path }}"></div>
       </div>
     </div>
   </div>
 </section>
-{% endif %}
-{% endblock %}
-
-{% block custom_js %}
-{% if page.extra.toc %}
-<script type="text/javascript">
-  const menuBarHeight = document.querySelector("nav.navbar").clientHeight;
-  const tocItems = document.querySelectorAll(".toc");
-  const navSections = new Array(tocItems.length);
-
-  tocItems.forEach((el, i) => {
-    let id = el.getAttribute("id").substring(5);
-    navSections[i] = document.getElementById(id);
-  })
-
-  function isVisible(tocIndex) {
-    const current = navSections[tocIndex];
-    const next = tocIndex < tocItems.length - 1 ? navSections[tocIndex + 1]
-      : document.querySelectorAll("section.section").item(1);
-
-    const c = current.getBoundingClientRect();
-    const n = next.getBoundingClientRect();
-    const h = (window.innerHeight || document.documentElement.clientHeight);
-
-    return (c.top <= h) && (n.top - menuBarHeight >= 0);
-  }
-
-  function activateIfVisible() {
-    for (b = true, i = 0; i < tocItems.length; i++) {
-      if (b && isVisible(i)) {
-        tocItems[i].classList.add('is-active');
-        b = false;
-      } else
-        tocItems[i].classList.remove('is-active');
-    }
-  }
-
-  var isTicking = null;
-  window.addEventListener('scroll', () => {
-    if (!isTicking) {
-      window.requestAnimationFrame(() => {
-        activateIfVisible();
-        isTicking = false;
-      });
-      isTicking = true;
-    }
-  }, false);
-</script>
-{% endif %}
-
-{% if page.extra.comments and config.extra.commenting.disqus %}
-<script>
-  var disqus_config = function () {
-    this.page.url = "{{config.base_url | safe}}";
-    this.page.identifier = "{{ current_path | safe}}";
-  };
-
-  (function () {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://{{ config.extra.commenting.disqus | safe}}.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  })();
-</script>
 {% endif %}
 {% endblock %}

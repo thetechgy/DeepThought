@@ -1,35 +1,11 @@
 @charset "utf-8"
 
-// Import a Google Font
-@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
-
-// Update Bulma's global variables
-$family-sans-serif: "Jost", sans-serif
-$footer-padding: 1.0rem 2.5rem
-
-html
-    scroll-behavior: smooth
-
-body
-    font-family: $family-sans-serif
-    display: flex
-    flex-direction: column
-    min-height: 100vh
-
-
-body[theme="dark"]
-    filter: invert(1) hue-rotate(180deg)
-
-
-section
-    flex: 1
-
-
-img[theme="dark"],
-picture[theme="dark"],
-video[theme="dark"],
-pre[theme="dark"]
-    filter: invert(1) hue-rotate(180deg)
+$family-sans-serif: "Jost", BlinkMacSystemFont, -apple-system, "Segoe UI", sans-serif
+$footer-padding: 1rem 2.5rem
+$grey: #4f5b66
+$grey-dark: #303841
+$grey-darker: #20252b
+$blue: #005ea8
 
 @import "utilities/_all"
 @import "base/_all"
@@ -39,3 +15,395 @@ pre[theme="dark"]
 @import "grid/_all"
 @import "helpers/_all"
 @import "layout/_all"
+
+@font-face
+    font-family: "Jost"
+    font-style: normal
+    font-weight: 100 900
+    font-display: swap
+    src: url("fonts/jost-latin-normal.woff2") format("woff2")
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
+
+@font-face
+    font-family: "Jost"
+    font-style: normal
+    font-weight: 100 900
+    font-display: swap
+    src: url("fonts/jost-latin-ext-normal.woff2") format("woff2")
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF
+
+@font-face
+    font-family: "Jost"
+    font-style: italic
+    font-weight: 100 900
+    font-display: swap
+    src: url("fonts/jost-latin-italic.woff2") format("woff2")
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
+
+@font-face
+    font-family: "Jost"
+    font-style: italic
+    font-weight: 100 900
+    font-display: swap
+    src: url("fonts/jost-latin-ext-italic.woff2") format("woff2")
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF
+
+:root
+    --dt-background: #ffffff
+    --dt-surface: #f4f6f8
+    --dt-text: #20252b
+    --dt-muted: #4f5b66
+    --dt-link: #005ea8
+    --dt-link-visited: #5a2ca0
+    --dt-border: #68727d
+    --dt-focus: #9c2c87
+    --dt-shadow: rgba(31, 35, 40, 0.14)
+
+:root[data-theme="dark"]
+    --dt-background: #111418
+    --dt-surface: #1b2026
+    --dt-text: #f0f3f6
+    --dt-muted: #b7c0ca
+    --dt-link: #7cc4ff
+    --dt-link-visited: #d1a8ff
+    --dt-border: #8b949e
+    --dt-focus: #ffd166
+    --dt-shadow: rgba(0, 0, 0, 0.45)
+
+html
+    background: var(--dt-background)
+
+body
+    background: var(--dt-background)
+    color: var(--dt-text)
+    display: flex
+    flex-direction: column
+    font-family: $family-sans-serif
+    min-height: 100vh
+
+main
+    flex: 1
+
+a
+    color: var(--dt-link)
+
+a:visited
+    color: var(--dt-link-visited)
+
+.content a,
+.subtitle a,
+.search-results__items a
+    text-decoration: underline
+    text-decoration-thickness: 0.11em
+    text-underline-offset: 0.16em
+
+a:hover,
+a:focus
+    color: var(--dt-link)
+    text-decoration-thickness: 0.18em
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible
+    outline: 0.1875rem solid var(--dt-focus)
+    outline-offset: 0.1875rem
+
+.skip-link
+    background: var(--dt-text)
+    color: var(--dt-background)
+    left: 0.5rem
+    padding: 0.75rem 1rem
+    position: fixed
+    top: 0.5rem
+    transform: translateY(-200%)
+    z-index: 100
+
+.skip-link:focus
+    color: var(--dt-background)
+    transform: translateY(0)
+
+.navbar,
+.navbar-menu,
+.footer,
+.box,
+.card,
+.input,
+.textarea,
+.select select,
+.button,
+.pagination-link,
+.pagination-previous,
+.pagination-next
+    background-color: var(--dt-background)
+    color: var(--dt-text)
+
+.navbar
+    border-bottom: 1px solid var(--dt-border)
+
+.navbar-item,
+.navbar-item:visited
+    color: var(--dt-text)
+
+a.navbar-item:hover,
+a.navbar-item:focus,
+a.navbar-item.is-active,
+.navbar-control:hover
+    background-color: var(--dt-surface)
+    color: var(--dt-link)
+
+a.navbar-item.is-active
+    box-shadow: inset 0 -0.1875rem currentColor
+
+.navbar-control
+    appearance: none
+    border: 0
+    cursor: pointer
+    font: inherit
+    min-height: 3rem
+    min-width: 3rem
+    width: 100%
+
+.navbar-burger
+    min-height: 3.25rem
+    min-width: 3.25rem
+
+.dt-icon
+    display: inline-block
+    fill: currentColor
+    height: 1.25rem
+    vertical-align: -0.2em
+    width: 1.25rem
+
+.dt-icon.is-small
+    height: 1rem
+    width: 1rem
+
+.title,
+.subtitle,
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6,
+.label,
+strong,
+th
+    color: var(--dt-text)
+
+.text-muted,
+.has-text-grey
+    color: var(--dt-muted) !important
+
+.box
+    border: 1px solid var(--dt-border)
+    box-shadow: 0 0.25rem 0.75rem var(--dt-shadow)
+
+.input,
+.textarea,
+.select select,
+.button,
+.pagination-link,
+.pagination-previous,
+.pagination-next
+    border-color: var(--dt-border)
+
+.button.is-black.is-outlined,
+.button.is-black.is-outlined:visited
+    background-color: var(--dt-background)
+    border-color: var(--dt-border)
+    color: var(--dt-text)
+
+.button.is-black.is-outlined:hover,
+.button.is-black.is-outlined:focus
+    background-color: var(--dt-surface)
+    border-color: var(--dt-focus)
+    color: var(--dt-link)
+
+.input::placeholder,
+.textarea::placeholder
+    color: var(--dt-muted)
+    opacity: 1
+
+.content blockquote,
+.content pre,
+code
+    background: var(--dt-surface)
+    color: var(--dt-text)
+
+.content blockquote
+    border-color: var(--dt-border)
+
+.content table
+    display: block
+    max-width: 100%
+    overflow-x: auto
+
+.content table td,
+.content table th
+    border-color: var(--dt-border)
+
+.author-avatar
+    height: 12rem
+    max-width: 12rem
+    object-fit: cover
+    width: 12rem
+
+.visually-hidden
+    clip: rect(0 0 0 0)
+    clip-path: inset(50%)
+    height: 1px
+    overflow: hidden
+    position: absolute
+    white-space: nowrap
+    width: 1px
+
+.responsive-image
+    margin: 2rem auto
+    max-width: 60rem
+    text-align: center
+
+.responsive-image figcaption
+    color: var(--dt-muted)
+    font-style: italic
+    margin-top: 0.5rem
+
+.responsive-image img
+    height: auto
+    width: 100%
+
+.giallo-l
+    display: inline-block
+    min-height: 1lh
+    width: 100%
+
+.giallo-ln
+    display: inline-block
+    margin-right: 0.4em
+    min-width: 3ch
+    opacity: 0.8
+    padding-right: 0.4em
+    text-align: right
+    user-select: none
+
+.social-links
+    display: flex
+    flex-wrap: wrap
+    gap: 0.5rem
+    justify-content: center
+    margin: 1rem 0
+
+.social-link
+    align-items: center
+    border: 1px solid var(--dt-border)
+    border-radius: 9999px
+    display: inline-flex
+    font-size: 0.75rem
+    font-weight: 700
+    justify-content: center
+    min-height: 2.75rem
+    min-width: 2.75rem
+    padding: 0.25rem
+    text-decoration: none
+
+.social-link__mark
+    color: var(--dt-text)
+
+.table-of-contents
+    position: sticky
+    top: 3rem
+
+.search-dialog
+    background: var(--dt-background)
+    border: 1px solid var(--dt-border)
+    border-radius: 0.375rem
+    color: var(--dt-text)
+    max-height: calc(100vh - 2rem)
+    max-width: min(42rem, calc(100vw - 2rem))
+    overflow: auto
+    padding: 1.25rem
+    width: 100%
+
+.search-dialog::backdrop
+    background: rgba(0, 0, 0, 0.72)
+
+.search-dialog__header
+    align-items: center
+    display: flex
+    justify-content: space-between
+
+.dialog-close
+    align-items: center
+    background: transparent
+    border: 1px solid var(--dt-border)
+    border-radius: 0.25rem
+    color: var(--dt-text)
+    cursor: pointer
+    display: inline-flex
+    justify-content: center
+    min-height: 2.75rem
+    min-width: 2.75rem
+
+.search-status
+    min-height: 1.5rem
+    padding: 0.5rem 0
+
+.search-results__items
+    list-style: none
+    margin: 0
+    padding: 0
+
+.search-results__items .box
+    margin-bottom: 1rem
+
+.search-result__teaser
+    margin-bottom: 0.5rem
+
+.footer
+    border-top: 1px solid var(--dt-border)
+
+img,
+picture,
+video,
+iframe,
+svg
+    max-width: 100%
+
+@media (prefers-color-scheme: dark)
+    :root:not([data-theme])
+        --dt-background: #111418
+        --dt-surface: #1b2026
+        --dt-text: #f0f3f6
+        --dt-muted: #b7c0ca
+        --dt-link: #7cc4ff
+        --dt-link-visited: #d1a8ff
+        --dt-border: #8b949e
+        --dt-focus: #ffd166
+        --dt-shadow: rgba(0, 0, 0, 0.45)
+
+@media (prefers-reduced-motion: no-preference)
+    html
+        scroll-behavior: smooth
+    .skip-link
+        transition: transform 100ms ease-out
+
+@media (forced-colors: active)
+    .dt-icon
+        fill: CanvasText
+    a.navbar-item.is-active
+        border-bottom: 0.1875rem solid LinkText
+        box-shadow: none
+    .social-link,
+    .dialog-close,
+    .box
+        border: 1px solid CanvasText
+
+@media screen and (min-width: 1024px)
+    .navbar-control
+        width: auto
+
+@media screen and (max-width: 320px)
+    .section
+        padding-left: 1rem
+        padding-right: 1rem
+    .content figure
+        margin-left: 0
+        margin-right: 0

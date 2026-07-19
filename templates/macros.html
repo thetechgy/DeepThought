@@ -1,228 +1,140 @@
+{% macro icon(name, class="") %}
+<svg class="dt-icon {{ class }}" aria-hidden="true" focusable="false">
+  <use href="{{ get_url(path='icons/deep-thought.svg') }}#{{ name }}"></use>
+</svg>
+{% endmacro %}
+
+{% macro social_link(url, label, mark, class="", rel="noopener noreferrer") %}
+<a class="social-link {{ class }}" href="{{ url }}" target="_blank" rel="{{ rel }}"
+  title="{{ label }}">
+  <span class="social-link__mark" aria-hidden="true">{{ mark }}</span>
+  <span class="visually-hidden">{{ label }} (opens in a new tab)</span>
+</a>
+{% endmacro %}
+
+{% macro author_avatar(author) %}
+{% set avatar_avif_192 = resize_image(path=author.avatar, width=192, height=192, op="fill", format="avif", quality=75) %}
+{% set avatar_avif_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="avif", quality=75) %}
+{% set avatar_webp_192 = resize_image(path=author.avatar, width=192, height=192, op="fill", format="webp", quality=80) %}
+{% set avatar_webp_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="webp", quality=80) %}
+{% set avatar_fallback_192 = resize_image(path=author.avatar, width=192, height=192, op="fill", format="auto", quality=80) %}
+{% set avatar_fallback_384 = resize_image(path=author.avatar, width=384, height=384, op="fill", format="auto", quality=80) %}
+<figure class="image is-flex is-justify-content-center is-align-items-center">
+  <picture>
+    <source type="image/avif" srcset="{{ avatar_avif_192.url }} 192w, {{ avatar_avif_384.url }} 384w"
+      sizes="192px" />
+    <source type="image/webp" srcset="{{ avatar_webp_192.url }} 192w, {{ avatar_webp_384.url }} 384w"
+      sizes="192px" />
+    <img class="author-avatar is-rounded" src="{{ avatar_fallback_192.url }}"
+      srcset="{{ avatar_fallback_192.url }} 192w, {{ avatar_fallback_384.url }} 384w"
+      sizes="192px"
+      alt="{{ author.avatar_alt | default(value=author.name) }}"
+      width="192" height="192" decoding="async" />
+  </picture>
+</figure>
+{% endmacro %}
+
 {% macro social_links(social_config) %}
-<p>
+<nav class="social-links" aria-label="Social links">
   {% if social_config.facebook %}
-  <a class="has-text-facebook" href="https://facebook.com/{{ social_config.facebook }}" target="_blank">
-    <span class="icon is-large" title="Facebook">
-      <i class="fab fa-facebook fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://facebook.com/" ~ social_config.facebook, label="Facebook", mark="f") }}
   {% endif %}
-
   {% if social_config.twitter %}
-  <a class="has-text-twitter" href="https://twitter.com/{{ social_config.twitter }}" target="_blank">
-    <span class="icon is-large" title="Twitter">
-      <i class="fab fa-twitter fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://twitter.com/" ~ social_config.twitter, label="Twitter", mark="X") }}
   {% endif %}
-
   {% if social_config.linkedin %}
-  <a class="has-text-linkedin" href="https://www.linkedin.com/in/{{ social_config.linkedin }}" target="_blank">
-    <span class="icon is-large" title="LinkedIn">
-      <i class="fab fa-linkedin fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.linkedin.com/in/" ~ social_config.linkedin, label="LinkedIn", mark="in") }}
   {% endif %}
-
   {% if social_config.instagram %}
-  <a class="has-text-instagram" href="https://www.instagram.com/{{ social_config.instagram}}" target="_blank">
-    <span class="icon is-large" title="Instagram">
-      <i class="fab fa-instagram fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.instagram.com/" ~ social_config.instagram, label="Instagram", mark="ig") }}
   {% endif %}
-
-
   {% if social_config.twitch %}
-  <a class="has-text-twitch" href="https://www.twitch.tv/{{ social_config.twitch }}" target="_blank">
-    <span class="icon is-large" title="Twitch">
-      <i class="fab fa-twitch fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.twitch.tv/" ~ social_config.twitch, label="Twitch", mark="tw") }}
   {% endif %}
-
   {% if social_config.tumblr %}
-  <a class="has-text-tumblr" href="https://www.tumblr.com/blog/{{ social_config.tumblr }}" target="_blank">
-    <span class="icon is-large" title="Tumblr">
-      <i class="fab fa-tumblr fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.tumblr.com/blog/" ~ social_config.tumblr, label="Tumblr", mark="t") }}
   {% endif %}
-
   {% if social_config.reddit %}
-  <a class="has-text-reddit" href="https://www.reddit.com/user/{{ social_config.reddit }}" target="_blank">
-    <span class="icon is-large" title="Reddit">
-      <i class="fab fa-reddit fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.reddit.com/user/" ~ social_config.reddit, label="Reddit", mark="r") }}
   {% endif %}
-
   {% if social_config.discord %}
-  <a class="has-text-discord" href="https://discordapp.com/users/{{ social_config.discord }}" target="_blank">
-    <span class="icon is-large" title="Discord">
-      <i class="fa-brands fa-discord"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://discordapp.com/users/" ~ social_config.discord, label="Discord", mark="D") }}
   {% endif %}
-
-  {# Certainly not the best implementation but Tera bombs if you try to access a nonexistent key #}
   {% if social_config.mastodon_username %}
     {% set mastodon_username = social_config.mastodon_username %}
   {% elif social_config.mastodon %}
     {% set mastodon_username = social_config.mastodon %}
   {% endif %}
   {% if mastodon_username %}
-  <a class="has-text-mastodon" href="https://{{ social_config.mastodon_server | default(value='mastodon.social') }}/@{{ mastodon_username }}" target="_blank" rel="me">
-    <span class="icon is-large" title="Mastodon">
-      <i class="fab fa-mastodon fa-lg"></i>
-    </span>
-  </a>
+  {% set mastodon_server = social_config.mastodon_server | default(value="mastodon.social") %}
+  {% set mastodon_username = mastodon_username | trim_start_matches(pat="@") %}
+  {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", mark="M", rel="me noopener noreferrer") }}
   {% endif %}
-
   {% if social_config.github %}
-  <a class="has-text-github" href="https://github.com/{{ social_config.github }}" target="_blank">
-    <span class="icon is-large" title="GitHub">
-      <i class="fab fa-github fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://github.com/" ~ social_config.github, label="GitHub", mark="GH") }}
   {% endif %}
-
   {% if social_config.bitbucket %}
-  <a class="has-text-bitbucket" href="https://bitbucket.org/{{ social_config.bitbucket }}" target="_blank">
-    <span class="icon is-large" title="Bitbucket">
-      <i class="fab fa-bitbucket fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://bitbucket.org/" ~ social_config.bitbucket, label="Bitbucket", mark="bb") }}
   {% endif %}
-
   {% if social_config.gitlab %}
-  <a class="has-text-gitlab" href="https://gitlab.com/{{ social_config.gitlab }}" target="_blank">
-    <span class="icon is-large" title="GitLab">
-      <i class="fab fa-gitlab fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://gitlab.com/" ~ social_config.gitlab, label="GitLab", mark="GL") }}
   {% endif %}
-
   {% if social_config.behance %}
-  <a class="has-text-behance" href="https://www.behance.net/{{ social_config.behance }}" target="_blank">
-    <span class="icon is-large" title="Behance">
-      <i class="fab fa-behance fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.behance.net/" ~ social_config.behance, label="Behance", mark="Bē") }}
   {% endif %}
-
   {% if social_config.stackoverflow %}
-  <a class="has-text-stackoverflow" href="https://stackoverflow.com/users/{{ social_config.stackoverflow }}" target="_blank">
-    <span class="icon is-large" title="Stack Overflow">
-      <i class="fab fa-stack-overflow fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://stackoverflow.com/users/" ~ social_config.stackoverflow, label="Stack Overflow", mark="SO") }}
   {% endif %}
-
   {% if social_config.medium %}
-  <a class="has-text-medium" href="https://medium.com/@{{ social_config.medium }}" target="_blank">
-    <span class="icon is-large" title="Medium">
-      <i class="fab fa-medium fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://medium.com/@" ~ social_config.medium, label="Medium", mark="M") }}
   {% endif %}
-
   {% if social_config.dev %}
-  <a class="has-text-dev" href="https://dev.to/{{ social_config.dev }}" target="_blank">
-    <span class="icon is-large" title="dev.to">
-      <i class="fab fa-dev fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://dev.to/" ~ social_config.dev, label="dev.to", mark="DEV") }}
   {% endif %}
-
   {% if social_config.soundcloud %}
-  <a class="has-text-soundcloud" href="https://soundcloud.com/{{ social_config.soundcloud }}" target="_blank">
-    <span class="icon is-large" title="soundcloud">
-      <i class="fab fa-soundcloud fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://soundcloud.com/" ~ social_config.soundcloud, label="SoundCloud", mark="SC") }}
   {% endif %}
-
   {% if social_config.google_scholar %}
-  <a class="has-text-googlescholar" href="https://scholar.google.com/citations?user={{ social_config.google_scholar }}" target="_blank">
-    <span class="icon is-large" title="Google Scholar">
-      <i class="ai ai-google-scholar ai-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://scholar.google.com/citations?user=" ~ social_config.google_scholar, label="Google Scholar", mark="GS") }}
   {% endif %}
-  
   {% if social_config.orcid %}
-  <a class="has-text-orcid" href="https://orcid.org/{{ social_config.orcid }}" target="_blank">
-    <span class="icon is-large" title="ORCiD">
-      <i class="fab fa-orcid fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://orcid.org/" ~ social_config.orcid, label="ORCID", mark="iD") }}
   {% endif %}
-
   {% if social_config.keybase %}
-  <a class="has-text-keybase" href="https://keybase.io/{{ social_config.keybase }}" target="_blank">
-    <span class="icon is-large" title="Keybase">
-      <i class="fab fa-keybase fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://keybase.io/" ~ social_config.keybase, label="Keybase", mark="K") }}
   {% endif %}
-
   {% if social_config.email %}
-  <a class="has-text-black" href="mailto:{{ social_config.email }}" target="_blank">
-    <span class="icon is-large" title="Email">
-      <i class="far fa-envelope fa-lg"></i>
-    </span>
+  <a class="social-link" href="mailto:{{ social_config.email }}" title="Email">
+    <span class="social-link__mark" aria-hidden="true">@</span>
+    <span class="visually-hidden">Email</span>
   </a>
   {% endif %}
-
   {% if social_config.googleplay %}
-  <a href="https://play.google.com/store/apps/developer?id={{ social_config.googleplay }}&hl=en" target="_blank">
-    <span class="icon is-large" title="Google play">
-      <i class="fab fa-google-play fa-lg"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://play.google.com/store/apps/developer?id=" ~ social_config.googleplay ~ "&hl=en", label="Google Play", mark="GP") }}
   {% endif %}
-
   {% if social_config.youtube %}
-  <a class="has-text-youtube" href="https://www.youtube.com/c/{{ social_config.youtube }}" target="_blank">
-    <span class="icon is-large" title="YouTube">
-      <i class="fa-brands fa-youtube"></i>
-    </span>
-  </a>
+  {{ self::social_link(url="https://www.youtube.com/c/" ~ social_config.youtube, label="YouTube", mark="YT") }}
   {% endif %}
-
-  {% if config.generate_feed %}
-  <a class="has-text-rss" href="{{ config.base_url }}/{{ config.feed_filename }}" target="_blank">
-    <span class="icon is-large" title="RSS Feed">
-      <i class="fas fa-rss fa-lg"></i>
-    </span>
-  </a>
+  {% if config.generate_feeds and config.feed_filenames | length > 0 %}
+  {{ self::social_link(url=config.base_url ~ "/" ~ config.feed_filenames[0], label="RSS feed", mark="RSS") }}
   {% endif %}
-</p>
+</nav>
 {% endmacro %}
 
 {% macro page_publish_metadata(page) %}
-<span class="icon-text has-text-grey">
-  <span class="icon">
-    <i class="fas fa-user"></i>
-  </span>
+<span class="icon-text text-muted">
+  <span class="icon">{{ self::icon(name="user") }}</span>
   <span>{{ config.extra.author.name }} published on</span>
-  <span class="icon">
-    <i class="far fa-calendar-alt"></i>
-  </span>
+  <span class="icon">{{ self::icon(name="calendar") }}</span>
   <span><time datetime="{{ page.date }}">{{ page.date | date(format='%B %d, %Y') }}</time></span>
 </span>
 {% endmacro %}
 
 {% macro page_content_metadata(page) %}
-<span class="icon-text has-text-grey">
-  <span class="icon">
-    <i class="far fa-clock"></i>
-  </span>
+<span class="icon-text text-muted">
+  <span class="icon">{{ self::icon(name="clock") }}</span>
   <span>{{ page.reading_time }} min,</span>
-  <span class="icon">
-    <i class="fas fa-pencil-alt"></i>
-  </span>
+  <span class="icon">{{ self::icon(name="edit") }}</span>
   <span>{{ page.word_count }} words</span>
 </span>
 {% endmacro %}
@@ -231,12 +143,10 @@
 <p>
   Categories:
   {% for category in categories %}
-  <a class="has-text-info-dark has-text-weight-semibold" href="{{ get_taxonomy_url(kind='categories', name=category) }}">
+  <a class="has-text-weight-semibold" href="{{ get_taxonomy_url(kind='categories', name=category) }}">
     <span class="icon-text">
-      <span class="icon">
-        <i class="fas fa-cube"></i>
-      </span>
-      <span>{{category}}</span>
+      <span class="icon">{{ self::icon(name="category") }}</span>
+      <span>{{ category }}</span>
     </span>
   </a>
   {% endfor %}
@@ -247,12 +157,10 @@
 <p>
   Tags:
   {% for tag in tags %}
-  <a class="has-text-info-dark has-text-weight-semibold" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">
+  <a class="has-text-weight-semibold" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">
     <span class="icon-text">
-      <span class="icon">
-        <i class="fas fa-tag"></i>
-      </span>
-      <span>{{tag}}</span>
+      <span class="icon">{{ self::icon(name="tag") }}</span>
+      <span>{{ tag }}</span>
     </span>
   </a>
   {% endfor %}

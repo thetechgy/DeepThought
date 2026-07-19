@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ config.title }} | {{ section.title }}
+{{ section.title }} | {{ config.title }}
 {% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+{% block og_title %}{{ section.title }} | {{ config.title }}{% endblock og_title %}
+{% block og_description %}{{ section.description | default(value=config.description) }}{% endblock og_description %}
 
 {% block content %}
 <section class="section">
@@ -12,7 +15,7 @@
       <p class="subtitle is-4">{{ section.description }}</p>
     </div>
     <div class="content">
-      {{ section.content | safe }}
+      {{ section.content | replace(from="<h1", to="<h2") | replace(from="</h1>", to="</h2>") | safe }}
     </div>
     <div class="columns is-centered">
       <div class="column is-9">
@@ -25,7 +28,7 @@
         {% for page in pages %}
         <article class="box">
           <h2 class="title">
-            <a class="has-text-dark" href='{{ page.permalink }}'>
+            <a class="listing-title-link" href='{{ page.permalink }}'>
               {{ page.title }}
             </a>
           </h2>
@@ -39,12 +42,14 @@
             </div>
           </div>
           <div class="content mt-2">
-            {{ page.summary | safe }}
-            <a class="has-text-danger-dark has-text-weight-semibold" href='{{ page.permalink }}'>
-              Read More
-              <span class="icon is-small">
-                <i class="fas fa-arrow-right fa-xs"></i>
-              </span>
+            {% if page.summary %}
+            {{ page.summary | replace(from="<h1", to="<h3") | replace(from="</h1>", to="</h3>") | safe }}
+            {% else %}
+            <p>{{ page.description }}</p>
+            {% endif %}
+            <a class="read-more-link has-text-weight-semibold" href='{{ page.permalink }}'>
+              Read {{ page.title }}
+              {{ macros::icon(name="arrow-right", class="is-small") }}
             </a>
           </div>
           <div class="columns">
@@ -65,7 +70,7 @@
     </div>
   </div>
   {% if section.extra.updated %}
-  <p class="has-text-grey is-size-6 has-text-centered">
+  <p class="text-muted is-size-6 has-text-centered">
     <em>Last updated: {{ section.extra.updated | date(format="%B %e, %Y") }}</em>
   </p>
   {% endif %}

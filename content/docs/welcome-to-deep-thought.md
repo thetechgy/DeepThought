@@ -85,12 +85,18 @@ We have them!
 
 ## Youtube
 
-with `youtube(id="the_id_here")`
-{{ youtube(id="dNRDvLACg5Q") }}
+with `youtube(id="the_id_here", title="Descriptive video title")`
+{{ youtube(id="dNRDvLACg5Q", title="Deep Thought video") }}
 
 ## Vimeo
-with `vimeo(id="id_here")`
-{{ vimeo(id="115189988") }}
+with `vimeo(id="id_here", title="Descriptive video title")`
+{{ vimeo(id="115189988", title="Vimeo video example") }}
+
+## Responsive images
+
+Use `responsive_image` to generate hashed AVIF and WebP sources with dimensions:
+
+{{ responsive_image(path="images/avatar.png", alt="DeepThought theme logo", caption="The DeepThought logo rendered responsively.") }}
 
 ## Links
 
