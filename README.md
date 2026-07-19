@@ -223,12 +223,21 @@ lazy_async_image = true
 
 [markdown.highlighting]
 style = "class"
-light_theme = "github-light"
-dark_theme = "github-dark"
+light_theme = "GitHub Light Colorblind"
+dark_theme = "GitHub Dark Colorblind"
+extra_themes = [
+    "themes/DeepThought/highlight_themes/github-vscode-theme/light-colorblind.json",
+    "themes/DeepThought/highlight_themes/github-vscode-theme/dark-colorblind.json",
+]
 
 [search]
 index_format = "elasticlunr_json"
 ```
+
+The paths above assume the theme is installed at `themes/DeepThought`. The bundled demo uses the
+same files directly from `highlight_themes/github-vscode-theme`. Both variants come from the
+official GitHub Theme for Visual Studio Code and preserve the existing JavaScript-controlled
+light/dark switch.
 
 ### Accessible media shortcodes
 

@@ -147,8 +147,12 @@ index_format = "elasticlunr_json"
 
 [markdown.highlighting]
 style = "class"
-light_theme = "github-light"
-dark_theme = "github-dark"
+light_theme = "GitHub Light Colorblind"
+dark_theme = "GitHub Dark Colorblind"
+extra_themes = [
+    "highlight_themes/github-vscode-theme/light-colorblind.json",
+    "highlight_themes/github-vscode-theme/dark-colorblind.json",
+]
 error_on_missing_language = true
 
 # You can put any kind of data here. The data

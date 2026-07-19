@@ -1,10 +1,10 @@
 const { test, expect } = require("@playwright/test");
 
-async function preparePage(page, theme) {
+async function preparePage(page, theme, path = "/") {
   await page.addInitScript((selectedTheme) => {
     window.localStorage.setItem("theme", selectedTheme);
   }, theme);
-  await page.goto("/");
+  await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -32,5 +32,16 @@ for (const theme of ["light", "dark"]) {
       animations: "disabled",
       fullPage: true
     });
+  });
+
+  test("syntax highlighting " + theme + " visual", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium", "The desktop project owns code baselines");
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await preparePage(page, theme, "/docs/welcome-to-deep-thought/");
+
+    await expect(page.locator("pre.giallo").first()).toHaveScreenshot(
+      "syntax-highlighting-" + theme + ".png",
+      { animations: "disabled" }
+    );
   });
 }

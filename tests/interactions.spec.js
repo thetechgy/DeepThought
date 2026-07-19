@@ -343,3 +343,17 @@ test("forced-colors and reduced-motion preferences retain operable controls", as
   await expect(page.locator(".skip-link")).toHaveCSS("transition-duration", "0s");
   await context.close();
 });
+
+test("only horizontally scrollable code blocks join the keyboard order", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/docs/welcome-to-deep-thought/");
+  await page.evaluate(() => document.fonts.ready);
+
+  const codeBlock = page.locator("pre.giallo").first();
+  await expect(codeBlock).toHaveAttribute("tabindex", "0");
+  await codeBlock.focus();
+  await expect(codeBlock).toBeFocused();
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(codeBlock).not.toHaveAttribute("tabindex");
+});

@@ -84,6 +84,22 @@ disqus = "<your_disqus>"
 Use the lowercase DNS label from `https://your-shortname.disqus.com`. The value may contain 1–63
 letters, digits, or internal hyphens; invalid values disable comment loading.
 
+## Syntax Highlighting
+
+Use the bundled GitHub Colorblind themes with Zola's class-based highlighting so code follows the
+site's light/dark selection:
+
+```toml
+[markdown.highlighting]
+style = "class"
+light_theme = "GitHub Light Colorblind"
+dark_theme = "GitHub Dark Colorblind"
+extra_themes = [
+    "themes/DeepThought/highlight_themes/github-vscode-theme/light-colorblind.json",
+    "themes/DeepThought/highlight_themes/github-vscode-theme/dark-colorblind.json",
+]
+```
+
 ## External Libraries
 
 ### Mermaid, Chart and Galleria
