@@ -8,15 +8,18 @@ const zlib = require("node:zlib");
 
 const repositoryRoot = path.resolve(__dirname, "..");
 
-function buildWithConfig(t, transformConfig = (sourceConfig) => sourceConfig) {
+function buildWithConfig(t, transformConfig = null) {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "deepthought-config-"));
   const configPath = path.join(temporaryRoot, "config.toml");
   const outputPath = path.join(temporaryRoot, "public");
   const highlightingPath = path.join(temporaryRoot, "highlight_themes");
   const sourceConfig = fs.readFileSync(path.join(repositoryRoot, "config.toml"), "utf8");
-  const variantConfig = transformConfig(sourceConfig);
+  const variantConfig = transformConfig ? transformConfig(sourceConfig) : sourceConfig;
 
   t.after(() => fs.rmSync(temporaryRoot, { force: true, recursive: true }));
+  if (transformConfig) {
+    assert.notEqual(variantConfig, sourceConfig, "config transform must change the fixture");
+  }
   fs.cpSync(path.join(repositoryRoot, "highlight_themes"), highlightingPath, {
     recursive: true
   });
