@@ -8,6 +8,10 @@
 {% block og_title %}{{ page.title }} | {{ config.title }}{% endblock og_title %}
 {% block og_description %}{{ page.description | default(value="Read " ~ page.title ~ " on " ~ config.title ~ ".") }}{% endblock og_description %}
 
+{% block syntax_stylesheets %}
+{% if page.content is containing('class="giallo') %}{{ super() }}{% endif %}
+{% endblock syntax_stylesheets %}
+
 {% block content %}
 <section class="section">
   <div class="container">

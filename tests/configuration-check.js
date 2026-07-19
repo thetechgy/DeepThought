@@ -51,13 +51,30 @@ test("the core stylesheet stays within its render-blocking transfer budget", (t)
   const gzipBytes = zlib.gzipSync(stylesheet).byteLength;
 
   assert.ok(
-    stylesheet.byteLength <= 120_000,
-    `deep-thought.css is ${stylesheet.byteLength} bytes; expected at most 120000`
+    stylesheet.byteLength <= 75_000,
+    `deep-thought.css is ${stylesheet.byteLength} bytes; expected at most 75000`
   );
   assert.ok(
-    gzipBytes <= 18_500,
-    `deep-thought.css is ${gzipBytes} gzip bytes; expected at most 18500`
+    gzipBytes <= 13_000,
+    `deep-thought.css is ${gzipBytes} gzip bytes; expected at most 13000`
   );
+});
+
+test("built-in templates preload the primary font and load syntax CSS only when needed", (t) => {
+  const outputPath = buildWithConfig(t);
+  const homepage = fs.readFileSync(path.join(outputPath, "index.html"), "utf8");
+  const codePage = fs.readFileSync(
+    path.join(outputPath, "docs", "basic-markdown-syntax", "index.html"),
+    "utf8"
+  );
+  const fontPreloads = [...homepage.matchAll(
+    /<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="[^"]*\/fonts\/jost-latin-normal\.woff2")(?=[^>]*\bas="font")(?=[^>]*\btype="font\/woff2")(?=[^>]*\bcrossorigin(?:\s|\/?>))[^>]*>/g
+  )];
+
+  assert.equal(fontPreloads.length, 1, "generated homepage must preload the primary font once");
+  assert.doesNotMatch(homepage, /\bid="giallo-(?:light|dark)"/);
+  assert.match(codePage, /\bid="giallo-light"/);
+  assert.match(codePage, /\bid="giallo-dark"/);
 });
 
 test("an empty feed filename list omits the RSS link without failing the build", (t) => {
@@ -117,11 +134,15 @@ test("theme defaults apply before JavaScript and select matching highlighting", 
       `default = "${themeCase.configured}"`
     ));
     const homepage = fs.readFileSync(path.join(outputPath, "index.html"), "utf8");
+    const codePage = fs.readFileSync(
+      path.join(outputPath, "docs", "basic-markdown-syntax", "index.html"),
+      "utf8"
+    );
     const htmlTag = homepage.match(/<html[^>]*>/)?.[0];
-    const lightMedia = homepage.match(
+    const lightMedia = codePage.match(
       /<link id="giallo-light"[^>]*\bmedia="([^"]+)"/
     )?.[1];
-    const darkMedia = homepage.match(
+    const darkMedia = codePage.match(
       /<link id="giallo-dark"[^>]*\bmedia="([^"]+)"/
     )?.[1];
 

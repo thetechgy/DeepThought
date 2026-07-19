@@ -51,13 +51,16 @@
   {% if config.extra.katex.enabled %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" integrity="sha384-R4558gYOUz8mP9YWpZJjofhk+zx0AS11p36HnD2ZKj/6JR5z27gSSULCNHIRReVs" crossorigin="anonymous" />
   {% endif %}
+  <link rel="preload" href="{{ get_url(path='fonts/jost-latin-normal.woff2') }}" as="font" type="font/woff2" crossorigin />
   <link href="{{ get_url(path='deep-thought.css') }}" rel="stylesheet" />
+  {% block syntax_stylesheets %}
   {% if config.markdown.highlighting.style | default(value="inline") == "class" %}
   <link id="giallo-light" href="{{ get_url(path='giallo-light.css') }}" rel="stylesheet"
     media="{% if theme_default == "light" %}all{% elif theme_default == "dark" %}not all{% else %}(prefers-color-scheme: light){% endif %}" />
   <link id="giallo-dark" href="{{ get_url(path='giallo-dark.css') }}" rel="stylesheet"
     media="{% if theme_default == "dark" %}all{% elif theme_default == "light" %}not all{% else %}(prefers-color-scheme: dark){% endif %}" />
   {% endif %}
+  {% endblock syntax_stylesheets %}
   {% if config.extra.galleria.enabled or config.extra.mapbox.enabled or config.extra.mermaid.enabled or config.extra.chart.enabled %}
   <link href="{{ get_url(path='deep-thought-extended.css') }}" rel="stylesheet" />
   {% endif %}

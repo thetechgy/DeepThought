@@ -20,33 +20,252 @@ $colors: ("black": ($black, $white))
 @import "base/animations"
 
 @import "elements/box"
-@import "elements/button"
 @import "elements/container"
 @import "elements/content"
 @import "elements/icon"
-@import "elements/image"
 @import "elements/title"
-@import "elements/other"
 
 @import "form/shared"
 @import "form/input-textarea"
-@import "form/tools"
 
 @import "components/level"
 @import "components/menu"
-@import "components/navbar"
 @import "components/pagination"
 
-@import "grid/columns"
-
-@import "helpers/flexbox"
-@import "helpers/spacing"
-@import "helpers/typography"
-@import "helpers/visibility"
-
-@import "layout/hero"
 @import "layout/section"
 @import "layout/footer"
+
+// Keep the public classes used by DeepThought's templates without emitting
+// every Bulma variant, breakpoint, grid fraction, or spacing combination.
+.button
+    @extend %control
+    @extend %unselectable
+    background-color: $white
+    border-color: $grey-lighter
+    border-width: 1px
+    color: $grey-darker
+    cursor: pointer
+    justify-content: center
+    padding: calc(0.5em - 1px) 1em
+    text-align: center
+    white-space: nowrap
+
+.button .icon
+    height: 1.5em
+    width: 1.5em
+
+.button .icon:first-child:not(:last-child)
+    margin-left: calc(-0.5em - 1px)
+    margin-right: 0.25em
+
+.button .icon:last-child:not(:first-child)
+    margin-left: 0.25em
+    margin-right: calc(-0.5em - 1px)
+
+.image
+    display: block
+    position: relative
+
+.image img
+    display: block
+    height: auto
+    width: 100%
+
+.image img.is-rounded
+    border-radius: $radius-rounded
+
+.heading
+    display: block
+    font-size: 0.6875rem
+    letter-spacing: 0.0625rem
+    margin-bottom: 0.3125rem
+    text-transform: uppercase
+
+.label
+    color: $grey-darker
+    display: block
+    font-size: 1rem
+    font-weight: $weight-bold
+
+.label:not(:last-child)
+    margin-bottom: 0.5em
+
+.field:not(:last-child)
+    margin-bottom: 0.75rem
+
+.control
+    box-sizing: border-box
+    clear: both
+    font-size: 1rem
+    position: relative
+    text-align: inherit
+
+.navbar
+    min-height: 3.25rem
+    position: relative
+    z-index: 30
+
+.navbar > .container
+    min-height: 3.25rem
+    width: 100%
+
+.navbar-brand
+    align-items: stretch
+    display: flex
+    flex-shrink: 0
+    min-height: 3.25rem
+
+.navbar-brand .navbar-item
+    align-items: center
+    display: flex
+
+.navbar-item
+    display: block
+    flex-grow: 0
+    flex-shrink: 0
+    line-height: 1.5
+    padding: 0.5rem 0.75rem
+    position: relative
+
+.navbar-burger
+    appearance: none
+    background: none
+    border: 0
+    color: currentColor
+    cursor: pointer
+    display: block
+    font: inherit
+    height: 3.25rem
+    margin-left: auto
+    padding: 0
+    position: relative
+    width: 3.25rem
+
+.navbar-burger span
+    background-color: currentColor
+    display: block
+    height: 1px
+    left: calc(50% - 8px)
+    position: absolute
+    transform-origin: center
+    width: 16px
+
+.navbar-burger span:nth-child(1)
+    top: calc(50% - 6px)
+
+.navbar-burger span:nth-child(2)
+    top: calc(50% - 1px)
+
+.navbar-burger span:nth-child(3)
+    top: calc(50% + 4px)
+
+.navbar-burger.is-active span:nth-child(1)
+    transform: translateY(5px) rotate(45deg)
+
+.navbar-burger.is-active span:nth-child(2)
+    opacity: 0
+
+.navbar-burger.is-active span:nth-child(3)
+    transform: translateY(-5px) rotate(-45deg)
+
+.navbar-menu
+    display: none
+    padding: 0.5rem 0
+
+.navbar-menu.is-active
+    display: block
+
+.columns
+    margin: -0.75rem
+    margin-bottom: 0.75rem
+    margin-top: -0.75rem
+
+.columns:last-child
+    margin-bottom: -0.75rem
+
+.columns.is-centered
+    justify-content: center
+
+.columns.is-gapless
+    margin: 0
+
+.columns.is-gapless > .column
+    margin: 0
+    padding: 0 !important
+
+.columns.is-multiline
+    flex-wrap: wrap
+
+.column
+    display: block
+    flex-basis: 0
+    flex-grow: 1
+    flex-shrink: 1
+    padding: 0.75rem
+
+.hero
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
+.hero-body
+    flex-grow: 1
+    flex-shrink: 0
+    padding: 3rem 1.5rem
+
+.is-flex
+    display: flex !important
+
+.is-justify-content-center
+    justify-content: center !important
+
+.is-align-items-center
+    align-items: center !important
+
+.has-text-centered
+    text-align: center !important
+
+.has-text-weight-semibold
+    font-weight: $weight-semibold !important
+
+.has-text-weight-bold
+    font-weight: $weight-bold !important
+
+.is-size-5
+    font-size: $size-5 !important
+
+.is-size-6
+    font-size: $size-6 !important
+
+.is-size-7
+    font-size: $size-7 !important
+
+.mb-2
+    margin-bottom: 0.5rem !important
+
+.ml-2
+    margin-left: 0.5rem !important
+
+.mr-2
+    margin-right: 0.5rem !important
+
+.mr-4
+    margin-right: 1rem !important
+
+.mt-2
+    margin-top: 0.5rem !important
+
+.my-6
+    margin-bottom: 3rem !important
+    margin-top: 3rem !important
+
+.pb-0
+    padding-bottom: 0 !important
+
+.py-4
+    padding-bottom: 1rem !important
+    padding-top: 1rem !important
 
 @font-face
     font-family: "Jost"
@@ -480,6 +699,10 @@ svg
         scroll-behavior: smooth
     .skip-link
         transition: transform 100ms ease-out
+    .navbar-burger span
+        transition-duration: 86ms
+        transition-property: background-color, opacity, transform
+        transition-timing-function: ease-out
 
 @media (forced-colors: active)
     .dt-icon
@@ -492,9 +715,64 @@ svg
     .box
         border: 1px solid CanvasText
 
+@media screen and (max-width: 768px)
+    .is-hidden-mobile
+        display: none !important
+
+@media screen and (min-width: 769px)
+    .columns
+        display: flex
+    .column.is-2
+        flex: none
+        width: 16.6667%
+    .column.is-4
+        flex: none
+        width: 33.3333%
+    .column.is-6
+        flex: none
+        width: 50%
+    .column.is-8
+        flex: none
+        width: 66.6667%
+    .column.is-9
+        flex: none
+        width: 75%
+    .column.is-offset-2
+        margin-left: 16.6667%
+    .hero-body
+        padding: 3rem
+
 @media screen and (min-width: 1024px)
+    .navbar,
+    .navbar-menu,
+    .navbar-end
+        align-items: stretch
+        display: flex
+    .navbar > .container
+        align-items: stretch
+        display: flex
+    .navbar > .container .navbar-brand
+        margin-left: -0.75rem
+    .navbar > .container .navbar-menu
+        margin-right: -0.75rem
+    .navbar-burger
+        display: none
+    .navbar-item
+        align-items: center
+        display: flex
+    .navbar-menu
+        flex-grow: 1
+        flex-shrink: 0
+        padding: 0
+    .navbar-end
+        justify-content: flex-end
+        margin-left: auto
+    a.navbar-item.is-active:not(:focus):not(:hover)
+        background-color: transparent
     .navbar-control
         width: auto
+    .has-text-right-desktop
+        text-align: right !important
 
 @media screen and (max-width: 320px)
     .section
