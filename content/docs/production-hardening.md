@@ -45,3 +45,18 @@ integrations require additional script, style, image, connection, worker, or fra
 
 Dashboard and DNS settings are external state. Record their final values with the website
 repository and re-audit them on a schedule.
+
+## Preview and production SEO audits
+
+Cloudflare Pages preview deployments can send `X-Robots-Tag: noindex`. That is the correct
+behavior for a temporary preview, but Lighthouse reports it as a crawlability failure and lowers
+the SEO category score. Do not weaken preview indexing protection to make that score green.
+
+Run the theme's Lighthouse checks against the local generated site, where every scored SEO audit
+must pass. After promoting a release, audit the canonical production hostname separately and
+verify that it:
+
+- does not send `X-Robots-Tag: noindex`;
+- emits the production canonical URL, a non-empty meta description, and image alt text;
+- serves `robots.txt` and the configured sitemap; and
+- scores 100 in Lighthouse SEO.

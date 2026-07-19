@@ -4,10 +4,14 @@
 </svg>
 {% endmacro %}
 
-{% macro social_link(url, label, mark, class="", rel="noopener noreferrer") %}
+{% macro social_link(url, label, mark="", icon="", class="", rel="noopener noreferrer") %}
 <a class="social-link {{ class }}" href="{{ url }}" target="_blank" rel="{{ rel }}"
   title="{{ label }}">
+  {% if icon %}
+  {{ self::icon(name=icon, class="social-link__icon") }}
+  {% else %}
   <span class="social-link__mark" aria-hidden="true">{{ mark }}</span>
+  {% endif %}
   <span class="visually-hidden">{{ label }} (opens in a new tab)</span>
 </a>
 {% endmacro %}
@@ -37,28 +41,28 @@
 {% macro social_links(social_config) %}
 <nav class="social-links" aria-label="Social links">
   {% if social_config.facebook %}
-  {{ self::social_link(url="https://facebook.com/" ~ social_config.facebook, label="Facebook", mark="f") }}
+  {{ self::social_link(url="https://facebook.com/" ~ social_config.facebook, label="Facebook", icon="brand-facebook") }}
   {% endif %}
   {% if social_config.twitter %}
-  {{ self::social_link(url="https://twitter.com/" ~ social_config.twitter, label="Twitter", mark="X") }}
+  {{ self::social_link(url="https://twitter.com/" ~ social_config.twitter, label="Twitter", icon="brand-twitter") }}
   {% endif %}
   {% if social_config.linkedin %}
-  {{ self::social_link(url="https://www.linkedin.com/in/" ~ social_config.linkedin, label="LinkedIn", mark="in") }}
+  {{ self::social_link(url="https://www.linkedin.com/in/" ~ social_config.linkedin, label="LinkedIn", icon="brand-linkedin", class="social-link--linkedin") }}
   {% endif %}
   {% if social_config.instagram %}
-  {{ self::social_link(url="https://www.instagram.com/" ~ social_config.instagram, label="Instagram", mark="ig") }}
+  {{ self::social_link(url="https://www.instagram.com/" ~ social_config.instagram, label="Instagram", icon="brand-instagram") }}
   {% endif %}
   {% if social_config.twitch %}
-  {{ self::social_link(url="https://www.twitch.tv/" ~ social_config.twitch, label="Twitch", mark="tw") }}
+  {{ self::social_link(url="https://www.twitch.tv/" ~ social_config.twitch, label="Twitch", icon="brand-twitch") }}
   {% endif %}
   {% if social_config.tumblr %}
-  {{ self::social_link(url="https://www.tumblr.com/blog/" ~ social_config.tumblr, label="Tumblr", mark="t") }}
+  {{ self::social_link(url="https://www.tumblr.com/blog/" ~ social_config.tumblr, label="Tumblr", icon="brand-tumblr") }}
   {% endif %}
   {% if social_config.reddit %}
-  {{ self::social_link(url="https://www.reddit.com/user/" ~ social_config.reddit, label="Reddit", mark="r") }}
+  {{ self::social_link(url="https://www.reddit.com/user/" ~ social_config.reddit, label="Reddit", icon="brand-reddit") }}
   {% endif %}
   {% if social_config.discord %}
-  {{ self::social_link(url="https://discordapp.com/users/" ~ social_config.discord, label="Discord", mark="D") }}
+  {{ self::social_link(url="https://discordapp.com/users/" ~ social_config.discord, label="Discord", icon="brand-discord") }}
   {% endif %}
   {% if social_config.mastodon_username %}
     {% set mastodon_username = social_config.mastodon_username %}
@@ -68,55 +72,55 @@
   {% if mastodon_username %}
   {% set mastodon_server = social_config.mastodon_server | default(value="mastodon.social") %}
   {% set mastodon_username = mastodon_username | trim_start_matches(pat="@") %}
-  {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", mark="M", rel="me noopener noreferrer") }}
+  {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", icon="brand-mastodon", rel="me noopener noreferrer") }}
   {% endif %}
   {% if social_config.github %}
-  {{ self::social_link(url="https://github.com/" ~ social_config.github, label="GitHub", mark="GH") }}
+  {{ self::social_link(url="https://github.com/" ~ social_config.github, label="GitHub", icon="brand-github", class="social-link--github") }}
   {% endif %}
   {% if social_config.bitbucket %}
-  {{ self::social_link(url="https://bitbucket.org/" ~ social_config.bitbucket, label="Bitbucket", mark="bb") }}
+  {{ self::social_link(url="https://bitbucket.org/" ~ social_config.bitbucket, label="Bitbucket", icon="brand-bitbucket") }}
   {% endif %}
   {% if social_config.gitlab %}
-  {{ self::social_link(url="https://gitlab.com/" ~ social_config.gitlab, label="GitLab", mark="GL") }}
+  {{ self::social_link(url="https://gitlab.com/" ~ social_config.gitlab, label="GitLab", icon="brand-gitlab") }}
   {% endif %}
   {% if social_config.behance %}
-  {{ self::social_link(url="https://www.behance.net/" ~ social_config.behance, label="Behance", mark="Bē") }}
+  {{ self::social_link(url="https://www.behance.net/" ~ social_config.behance, label="Behance", icon="brand-behance") }}
   {% endif %}
   {% if social_config.stackoverflow %}
-  {{ self::social_link(url="https://stackoverflow.com/users/" ~ social_config.stackoverflow, label="Stack Overflow", mark="SO") }}
+  {{ self::social_link(url="https://stackoverflow.com/users/" ~ social_config.stackoverflow, label="Stack Overflow", icon="brand-stack-overflow") }}
   {% endif %}
   {% if social_config.medium %}
-  {{ self::social_link(url="https://medium.com/@" ~ social_config.medium, label="Medium", mark="M") }}
+  {{ self::social_link(url="https://medium.com/@" ~ social_config.medium, label="Medium", icon="brand-medium") }}
   {% endif %}
   {% if social_config.dev %}
-  {{ self::social_link(url="https://dev.to/" ~ social_config.dev, label="dev.to", mark="DEV") }}
+  {{ self::social_link(url="https://dev.to/" ~ social_config.dev, label="dev.to", icon="brand-dev") }}
   {% endif %}
   {% if social_config.soundcloud %}
-  {{ self::social_link(url="https://soundcloud.com/" ~ social_config.soundcloud, label="SoundCloud", mark="SC") }}
+  {{ self::social_link(url="https://soundcloud.com/" ~ social_config.soundcloud, label="SoundCloud", icon="brand-soundcloud") }}
   {% endif %}
   {% if social_config.google_scholar %}
-  {{ self::social_link(url="https://scholar.google.com/citations?user=" ~ social_config.google_scholar, label="Google Scholar", mark="GS") }}
+  {{ self::social_link(url="https://scholar.google.com/citations?user=" ~ social_config.google_scholar, label="Google Scholar", icon="brand-google-scholar") }}
   {% endif %}
   {% if social_config.orcid %}
-  {{ self::social_link(url="https://orcid.org/" ~ social_config.orcid, label="ORCID", mark="iD") }}
+  {{ self::social_link(url="https://orcid.org/" ~ social_config.orcid, label="ORCID", icon="brand-orcid") }}
   {% endif %}
   {% if social_config.keybase %}
-  {{ self::social_link(url="https://keybase.io/" ~ social_config.keybase, label="Keybase", mark="K") }}
+  {{ self::social_link(url="https://keybase.io/" ~ social_config.keybase, label="Keybase", icon="brand-keybase") }}
   {% endif %}
   {% if social_config.email %}
   <a class="social-link" href="mailto:{{ social_config.email }}" title="Email">
-    <span class="social-link__mark" aria-hidden="true">@</span>
+    {{ self::icon(name="envelope", class="social-link__icon") }}
     <span class="visually-hidden">Email</span>
   </a>
   {% endif %}
   {% if social_config.googleplay %}
-  {{ self::social_link(url="https://play.google.com/store/apps/developer?id=" ~ social_config.googleplay ~ "&hl=en", label="Google Play", mark="GP") }}
+  {{ self::social_link(url="https://play.google.com/store/apps/developer?id=" ~ social_config.googleplay ~ "&hl=en", label="Google Play", icon="brand-google-play") }}
   {% endif %}
   {% if social_config.youtube %}
-  {{ self::social_link(url="https://www.youtube.com/c/" ~ social_config.youtube, label="YouTube", mark="YT") }}
+  {{ self::social_link(url="https://www.youtube.com/c/" ~ social_config.youtube, label="YouTube", icon="brand-youtube") }}
   {% endif %}
   {% if config.generate_feeds and config.feed_filenames | length > 0 %}
-  {{ self::social_link(url=config.base_url ~ "/" ~ config.feed_filenames[0], label="RSS feed", mark="RSS") }}
+  {{ self::social_link(url=config.base_url ~ "/" ~ config.feed_filenames[0], label="RSS feed", icon="rss") }}
   {% endif %}
 </nav>
 {% endmacro %}

@@ -54,6 +54,48 @@ test("images and new-tab links expose complete accessible contracts", async ({ p
   await expect(mastodonLink).toHaveAttribute("rel", /\bme\b/);
 });
 
+test("fonts and icons are self-hosted and social links use recognizable SVG symbols", async ({ page }) => {
+  const externalAssets = [];
+  const expectedOrigin = new URL(
+    process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:4173"
+  ).origin;
+  page.on("request", (request) => {
+    if (
+      ["font", "stylesheet"].includes(request.resourceType()) &&
+      new URL(request.url()).origin !== expectedOrigin
+    ) {
+      externalAssets.push(request.url());
+    }
+  });
+
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+
+  expect(externalAssets).toEqual([]);
+  await expect(page.locator('link[href*="fonts.googleapis.com"]')).toHaveCount(0);
+  await expect(page.locator('link[href*="fontawesome"]')).toHaveCount(0);
+  await expect(page.locator('link[href*="academicons"]')).toHaveCount(0);
+
+  const socialIcons = [
+    {
+      locator: page.locator('.social-link[title="LinkedIn"] use'),
+      symbol: "brand-linkedin"
+    },
+    {
+      locator: page.locator('.social-link[title="GitHub"] use'),
+      symbol: "brand-github"
+    }
+  ];
+
+  for (const socialIcon of socialIcons) {
+    const href = await socialIcon.locator.getAttribute("href");
+    expect(href).not.toBeNull();
+    const resolvedHref = new URL(href, page.url());
+    expect(resolvedHref.origin).toBe(expectedOrigin);
+    expect(resolvedHref.hash).toBe("#" + socialIcon.symbol);
+  }
+});
+
 test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {
   await page.goto("/");
 

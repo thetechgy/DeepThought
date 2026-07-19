@@ -50,25 +50,35 @@ $blue: #005ea8
 
 :root
     --dt-background: #ffffff
-    --dt-surface: #f4f6f8
-    --dt-text: #20252b
-    --dt-muted: #4f5b66
+    --dt-surface: #f5f5f5
+    --dt-active: #e8e8e8
+    --dt-elevated: #ffffff
+    --dt-text: #4a4a4a
+    --dt-heading: #363636
+    --dt-muted: #5f6872
     --dt-link: #005ea8
     --dt-link-visited: #5a2ca0
     --dt-border: #68727d
     --dt-focus: #9c2c87
-    --dt-shadow: rgba(31, 35, 40, 0.14)
+    --dt-shadow: rgba(10, 10, 10, 0.12)
+    --dt-linkedin: #0a66c2
+    --dt-github: #24292f
 
 :root[data-theme="dark"]
-    --dt-background: #111418
-    --dt-surface: #1b2026
-    --dt-text: #f0f3f6
-    --dt-muted: #b7c0ca
+    --dt-background: #000000
+    --dt-surface: #0a0a0a
+    --dt-active: #171717
+    --dt-elevated: #101010
+    --dt-text: #b5b5b5
+    --dt-heading: #c9c9c9
+    --dt-muted: #aab2bb
     --dt-link: #7cc4ff
     --dt-link-visited: #d1a8ff
     --dt-border: #8b949e
     --dt-focus: #ffd166
     --dt-shadow: rgba(0, 0, 0, 0.45)
+    --dt-linkedin: #70b5f9
+    --dt-github: #f0f3f6
 
 html
     background: var(--dt-background)
@@ -122,7 +132,10 @@ a:focus
 
 .navbar,
 .navbar-menu,
-.footer,
+.footer
+    background-color: var(--dt-surface)
+    color: var(--dt-text)
+
 .box,
 .card,
 .input,
@@ -135,9 +148,6 @@ a:focus
     background-color: var(--dt-background)
     color: var(--dt-text)
 
-.navbar
-    border-bottom: 1px solid var(--dt-border)
-
 .navbar-item,
 .navbar-item:visited
     color: var(--dt-text)
@@ -145,16 +155,20 @@ a:focus
 a.navbar-item:hover,
 a.navbar-item:focus,
 a.navbar-item.is-active,
-.navbar-control:hover
-    background-color: var(--dt-surface)
-    color: var(--dt-link)
+.navbar-control:hover,
+.navbar-control:focus
+    background-color: var(--dt-active)
+    color: var(--dt-heading)
 
 a.navbar-item.is-active
-    box-shadow: inset 0 -0.1875rem currentColor
+    box-shadow: none
 
 .navbar-control
     appearance: none
+    background: transparent
     border: 0
+    border-radius: 0
+    color: var(--dt-text)
     cursor: pointer
     font: inherit
     min-height: 3rem
@@ -168,16 +182,15 @@ a.navbar-item.is-active
 .dt-icon
     display: inline-block
     fill: currentColor
-    height: 1.25rem
+    height: 1.125rem
     vertical-align: -0.2em
-    width: 1.25rem
+    width: 1.125rem
 
 .dt-icon.is-small
     height: 1rem
     width: 1rem
 
 .title,
-.subtitle,
 .content h1,
 .content h2,
 .content h3,
@@ -187,15 +200,25 @@ a.navbar-item.is-active
 .label,
 strong,
 th
+    color: var(--dt-heading)
+
+.subtitle
     color: var(--dt-text)
+
+.content hr
+    background: transparent
+    border: 0
+    height: 0
+    margin: 2.5rem 0
 
 .text-muted,
 .has-text-grey
     color: var(--dt-muted) !important
 
 .box
-    border: 1px solid var(--dt-border)
-    box-shadow: 0 0.25rem 0.75rem var(--dt-shadow)
+    background: var(--dt-elevated)
+    border: 0
+    box-shadow: 0 0.5em 1em -0.125em var(--dt-shadow)
 
 .input,
 .textarea,
@@ -287,25 +310,47 @@ code
 .social-links
     display: flex
     flex-wrap: wrap
-    gap: 0.5rem
+    gap: 0.25rem
     justify-content: center
     margin: 1rem 0
 
 .social-link
     align-items: center
-    border: 1px solid var(--dt-border)
+    background: transparent
+    border: 0
     border-radius: 9999px
+    color: var(--dt-text)
     display: inline-flex
     font-size: 0.75rem
     font-weight: 700
     justify-content: center
     min-height: 2.75rem
     min-width: 2.75rem
-    padding: 0.25rem
+    padding: 0.625rem
     text-decoration: none
 
-.social-link__mark
+.social-link:visited
     color: var(--dt-text)
+
+.social-link:hover,
+.social-link:focus
+    background: var(--dt-active)
+    color: var(--dt-heading)
+
+.social-link--linkedin,
+.social-link--linkedin:visited
+    color: var(--dt-linkedin)
+
+.social-link--github,
+.social-link--github:visited
+    color: var(--dt-github)
+
+.social-link__icon
+    height: 1.375rem
+    width: 1.375rem
+
+.social-link__mark
+    color: currentColor
 
 .table-of-contents
     position: sticky
@@ -357,9 +402,6 @@ code
 .search-result__teaser
     margin-bottom: 0.5rem
 
-.footer
-    border-top: 1px solid var(--dt-border)
-
 img,
 picture,
 video,
@@ -369,15 +411,20 @@ svg
 
 @media (prefers-color-scheme: dark)
     :root:not([data-theme])
-        --dt-background: #111418
-        --dt-surface: #1b2026
-        --dt-text: #f0f3f6
-        --dt-muted: #b7c0ca
+        --dt-background: #000000
+        --dt-surface: #0a0a0a
+        --dt-active: #171717
+        --dt-elevated: #101010
+        --dt-text: #b5b5b5
+        --dt-heading: #c9c9c9
+        --dt-muted: #aab2bb
         --dt-link: #7cc4ff
         --dt-link-visited: #d1a8ff
         --dt-border: #8b949e
         --dt-focus: #ffd166
         --dt-shadow: rgba(0, 0, 0, 0.45)
+        --dt-linkedin: #70b5f9
+        --dt-github: #f0f3f6
 
 @media (prefers-reduced-motion: no-preference)
     html
