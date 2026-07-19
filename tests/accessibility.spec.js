@@ -36,6 +36,23 @@ for (const route of routes) {
   });
 }
 
+for (const theme of ["light", "dark"]) {
+  test("representative code passes axe in " + theme + " mode", async ({ page }) => {
+    await page.addInitScript((selectedTheme) => {
+      window.localStorage.setItem("theme", selectedTheme);
+    }, theme);
+    await page.goto("/docs/welcome-to-deep-thought/");
+
+    await expect(page.locator("pre.giallo").first()).toBeVisible();
+    const results = await new AxeBuilder({ page })
+      .include("pre.giallo:first-of-type")
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+}
+
 test("images and new-tab links expose complete accessible contracts", async ({ page }) => {
   await page.goto("/");
 

@@ -4,6 +4,10 @@
   "private": true,
   "description": "Accessibility, security, and performance validation for the DeepThought Zola theme",
   "scripts": {
+    "clean:highlighting": "node tests/clean-generated-highlighting.js",
+    "prebuild": "npm run clean:highlighting",
+    "prebuild:test": "npm run clean:highlighting",
+    "pretest:config": "npm run clean:highlighting",
     "build": "zola build",
     "build:test": "zola build --base-url http://127.0.0.1:4173",
     "test": "npm run test:config && playwright test",
