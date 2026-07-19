@@ -7,14 +7,46 @@ $grey-dark: #303841
 $grey-darker: #20252b
 $blue: #005ea8
 
+// Keep the Bulma foundation, but compile only the modules DeepThought uses.
+// Importing every optional Bulma component added substantial render-blocking CSS.
 @import "utilities/_all"
-@import "base/_all"
-@import "elements/_all"
-@import "form/_all"
-@import "components/_all"
-@import "grid/_all"
-@import "helpers/_all"
-@import "layout/_all"
+
+// DeepThought only emits Bulma's black control variant. Theme colors are
+// provided by the accessible CSS custom properties below.
+$colors: ("black": ($black, $white))
+
+@import "base/minireset"
+@import "base/generic"
+@import "base/animations"
+
+@import "elements/box"
+@import "elements/button"
+@import "elements/container"
+@import "elements/content"
+@import "elements/icon"
+@import "elements/image"
+@import "elements/title"
+@import "elements/other"
+
+@import "form/shared"
+@import "form/input-textarea"
+@import "form/tools"
+
+@import "components/level"
+@import "components/menu"
+@import "components/navbar"
+@import "components/pagination"
+
+@import "grid/columns"
+
+@import "helpers/flexbox"
+@import "helpers/spacing"
+@import "helpers/typography"
+@import "helpers/visibility"
+
+@import "layout/hero"
+@import "layout/section"
+@import "layout/footer"
 
 @font-face
     font-family: "Jost"
