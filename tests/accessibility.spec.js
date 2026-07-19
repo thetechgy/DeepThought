@@ -128,7 +128,9 @@ test("article listings keep concise visible labels with descriptive accessible n
 
   for (const taxonomyPath of ["/categories/", "/tags/"]) {
     await page.goto(taxonomyPath);
-    routes.push(await page.locator("main p a").first().getAttribute("href"));
+    const route = await page.locator("main p a").first().getAttribute("href");
+    expect(route).not.toBeNull();
+    routes.push(route);
   }
 
   for (const route of routes) {
