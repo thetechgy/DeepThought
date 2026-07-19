@@ -49,7 +49,9 @@ test("images and new-tab links expose complete accessible contracts", async ({ p
     await expect(link).toHaveAttribute("rel", /noopener/);
     await expect(link).toHaveAttribute("rel", /noreferrer/);
   }
-  await expect(page.locator('a[title="Mastodon"]')).toHaveAttribute("rel", /\bme\b/);
+  const mastodonLink = page.locator('a[title="Mastodon"]');
+  await expect(mastodonLink).toHaveAttribute("href", "https://mastodon.social/@RatanShreshtha");
+  await expect(mastodonLink).toHaveAttribute("rel", /\bme\b/);
 });
 
 test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {

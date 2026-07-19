@@ -118,6 +118,64 @@ test("comments load only from validated Disqus configuration", async ({ browser 
   await context.close();
 });
 
+test("maps render features without optional GeoJSON properties", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__mapPopupContents = [];
+    window.mapboxgl = {
+      Map: class {
+        addControl() {}
+
+        setCenter() {}
+      },
+      Marker: class {
+        setLngLat() {
+          return this;
+        }
+
+        setPopup(popup) {
+          this.popup = popup;
+          return this;
+        }
+
+        addTo() {
+          window.__mapPopupContents.push({
+            description: this.popup.content.querySelector("p").textContent,
+            title: this.popup.content.querySelector("h3").textContent
+          });
+          return this;
+        }
+      },
+      NavigationControl: class {},
+      Popup: class {
+        setDOMContent(content) {
+          this.content = content;
+          return this;
+        }
+      }
+    };
+  });
+  await page.route((url) => url.pathname === "/" && url.port === "4173", async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    const map = [
+      '<div class="map" data-mapbox-token="test-token" data-zoom="6"',
+      ' data-geojson=\'{"type":"FeatureCollection","features":[{"type":"Feature",',
+      '"geometry":{"type":"Point","coordinates":[1,2]}}]}\'></div>'
+    ].join("");
+    await route.fulfill({
+      body: body.replace("</body>", map + "</body>"),
+      response
+    });
+  });
+
+  await page.goto("/");
+
+  await expect(page.locator(".map")).not.toHaveText("Map could not be rendered.");
+  expect(await page.evaluate(() => window.__mapPopupContents)).toEqual([
+    { description: "", title: "" }
+  ]);
+});
+
 test("search dialog announces results and restores focus after Escape", async ({ page }) => {
   await page.goto("/");
   await revealNavigationControls(page);

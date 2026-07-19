@@ -67,6 +67,7 @@
   {% endif %}
   {% if mastodon_username %}
   {% set mastodon_server = social_config.mastodon_server | default(value="mastodon.social") %}
+  {% set mastodon_username = mastodon_username | trim_start_matches(pat="@") %}
   {{ self::social_link(url="https://" ~ mastodon_server ~ "/@" ~ mastodon_username, label="Mastodon", mark="M", rel="me noopener noreferrer") }}
   {% endif %}
   {% if social_config.github %}

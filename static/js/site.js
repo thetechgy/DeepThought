@@ -454,8 +454,9 @@
           var popupContent = document.createElement("div");
           var title = document.createElement("h3");
           var description = document.createElement("p");
-          title.textContent = marker.properties.title;
-          description.textContent = marker.properties.description;
+          var properties = marker.properties || {};
+          title.textContent = properties.title || "";
+          description.textContent = properties.description || "";
           popupContent.appendChild(title);
           popupContent.appendChild(description);
 
