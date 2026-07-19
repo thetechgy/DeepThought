@@ -68,6 +68,56 @@ test("navigation treats trailing-slash variants as the current page", async ({ p
   }
 });
 
+test("comments load only from validated Disqus configuration", async ({ browser }) => {
+  const context = await browser.newContext();
+  const scopedPage = await context.newPage();
+  const scopedRequests = [];
+
+  scopedPage.on("request", (request) => {
+    if (request.resourceType() === "script" && request.url().startsWith("https://")) {
+      scopedRequests.push(request.url());
+    }
+  });
+  await scopedPage.route(/^https:\/\//, (route) => route.abort());
+  await scopedPage.route(/\/docs\/extended-shortcodes\/$/, async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    const forgedContainer = '<div data-disqus-shortname="attacker.example/path?"></div>';
+    await route.fulfill({
+      body: body.replace("<body>", "<body>" + forgedContainer),
+      response
+    });
+  });
+
+  await scopedPage.goto("http://127.0.0.1:4173/docs/extended-shortcodes/");
+  expect(scopedRequests).toEqual(["https://deepthought-theme.disqus.com/embed.js"]);
+
+  const invalidPage = await context.newPage();
+  const invalidRequests = [];
+  invalidPage.on("request", (request) => {
+    if (request.resourceType() === "script" && request.url().startsWith("https://")) {
+      invalidRequests.push(request.url());
+    }
+  });
+  await invalidPage.route(/^https:\/\//, (route) => route.abort());
+  await invalidPage.route(/\/docs\/extended-shortcodes\/$/, async (route) => {
+    const response = await route.fetch();
+    const body = await response.text();
+    await route.fulfill({
+      body: body.replace(
+        'data-disqus-shortname="deepthought-theme"',
+        'data-disqus-shortname="attacker.example/path?"'
+      ),
+      response
+    });
+  });
+
+  await invalidPage.goto("http://127.0.0.1:4173/docs/extended-shortcodes/");
+  expect(invalidRequests).toEqual([]);
+  expect(await invalidPage.evaluate(() => typeof window.disqus_config)).toBe("undefined");
+  await context.close();
+});
+
 test("search dialog announces results and restores focus after Escape", async ({ page }) => {
   await page.goto("/");
   await revealNavigationControls(page);

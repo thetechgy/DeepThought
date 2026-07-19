@@ -342,8 +342,15 @@
   }
 
   function initializeComments() {
-    var container = document.querySelector("[data-disqus-shortname]");
+    var container = document.querySelector(
+      "#disqus_thread[data-disqus-shortname][data-page-url][data-page-identifier]"
+    );
     if (!container) {
+      return;
+    }
+
+    var shortname = container.dataset.disqusShortname;
+    if (!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(shortname)) {
       return;
     }
 
@@ -353,7 +360,7 @@
     };
 
     var script = document.createElement("script");
-    script.src = "https://" + container.dataset.disqusShortname + ".disqus.com/embed.js";
+    script.src = "https://" + shortname + ".disqus.com/embed.js";
     script.dataset.timestamp = String(Date.now());
     script.async = true;
     document.head.appendChild(script);

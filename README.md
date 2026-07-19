@@ -208,6 +208,10 @@ enabled = true
 access_token = "<your_access_token>"
 ```
 
+The Disqus shortname must be the lowercase DNS label from
+`https://your-shortname.disqus.com`: 1–63 letters, digits, or internal hyphens. Invalid
+shortnames are ignored so they cannot alter the remote script origin.
+
 Use a public Mapbox token restricted to the production and preview hostnames. Never commit a secret
 token or an unrestricted token with account-management scopes.
 
