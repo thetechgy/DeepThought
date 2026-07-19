@@ -4,10 +4,11 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
+const zlib = require("node:zlib");
 
 const repositoryRoot = path.resolve(__dirname, "..");
 
-function buildWithConfig(t, transformConfig) {
+function buildWithConfig(t, transformConfig = (sourceConfig) => sourceConfig) {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "deepthought-config-"));
   const configPath = path.join(temporaryRoot, "config.toml");
   const outputPath = path.join(temporaryRoot, "public");
@@ -16,7 +17,6 @@ function buildWithConfig(t, transformConfig) {
   const variantConfig = transformConfig(sourceConfig);
 
   t.after(() => fs.rmSync(temporaryRoot, { force: true, recursive: true }));
-  assert.notEqual(variantConfig, sourceConfig, "config transform must change the fixture");
   fs.cpSync(path.join(repositoryRoot, "highlight_themes"), highlightingPath, {
     recursive: true
   });
@@ -41,6 +41,21 @@ function buildWithConfig(t, transformConfig) {
 
   return outputPath;
 }
+
+test("the core stylesheet stays within its render-blocking transfer budget", (t) => {
+  const outputPath = buildWithConfig(t);
+  const stylesheet = fs.readFileSync(path.join(outputPath, "deep-thought.css"));
+  const gzipBytes = zlib.gzipSync(stylesheet).byteLength;
+
+  assert.ok(
+    stylesheet.byteLength <= 120_000,
+    `deep-thought.css is ${stylesheet.byteLength} bytes; expected at most 120000`
+  );
+  assert.ok(
+    gzipBytes <= 18_500,
+    `deep-thought.css is ${gzipBytes} gzip bytes; expected at most 18500`
+  );
+});
 
 test("an empty feed filename list omits the RSS link without failing the build", (t) => {
   const outputPath = buildWithConfig(t, (sourceConfig) => sourceConfig.replace(

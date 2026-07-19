@@ -39,5 +39,12 @@ Here is a WIP list of blocks in DeepThought templates to override:
 | `base.html` | `other_lang_search_js` | Provide custom search behavior, eg. [to use languages others than English](https://github.com/RatanShreshtha/DeepThought/#elasticlunr-search-in-other-language) |
 | `base.html` | `user_custom_js` | Provide any custom JS scripts at the end of the body of the page |
 
+## Custom Bulma components
+
+DeepThought compiles only the Bulma modules used by its built-in templates.
+Custom templates that use additional Bulma components must include those
+component styles through `user_custom_stylesheet` or the site's Sass entry point.
+
 ---
+
 [^1]: Relative to the `templates` directory
