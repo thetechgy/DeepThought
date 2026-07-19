@@ -263,7 +263,9 @@ test("navigation controls and social links keep large targets without visible co
 
   for (const selector of ["#nav-search", "#theme-toggle"]) {
     const control = page.locator(selector);
+    await expect(control).toBeVisible();
     const box = await control.boundingBox();
+    expect(box, selector + " should have a rendered bounding box").not.toBeNull();
     expect(box.width).toBeGreaterThanOrEqual(44);
     expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(control).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
@@ -274,7 +276,9 @@ test("navigation controls and social links keep large targets without visible co
   const socialLinks = page.locator(".social-link");
   expect(await socialLinks.count()).toBeGreaterThan(0);
   for (const socialLink of await socialLinks.all()) {
+    await expect(socialLink).toBeVisible();
     const box = await socialLink.boundingBox();
+    expect(box, "social link should have a rendered bounding box").not.toBeNull();
     expect(box.width).toBeGreaterThanOrEqual(44);
     expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(socialLink).toHaveCSS("border-top-width", "0px");

@@ -76,10 +76,24 @@ test("fonts and icons are self-hosted and social links use recognizable SVG symb
   await expect(page.locator('link[href*="fontawesome"]')).toHaveCount(0);
   await expect(page.locator('link[href*="academicons"]')).toHaveCount(0);
 
-  const linkedin = page.locator('.social-link[title="LinkedIn"] use');
-  const github = page.locator('.social-link[title="GitHub"] use');
-  await expect(linkedin).toHaveAttribute("href", /#brand-linkedin$/);
-  await expect(github).toHaveAttribute("href", /#brand-github$/);
+  const socialIcons = [
+    {
+      locator: page.locator('.social-link[title="LinkedIn"] use'),
+      symbol: "brand-linkedin"
+    },
+    {
+      locator: page.locator('.social-link[title="GitHub"] use'),
+      symbol: "brand-github"
+    }
+  ];
+
+  for (const socialIcon of socialIcons) {
+    const href = await socialIcon.locator.getAttribute("href");
+    expect(href).not.toBeNull();
+    const resolvedHref = new URL(href, page.url());
+    expect(resolvedHref.origin).toBe(expectedOrigin);
+    expect(resolvedHref.hash).toBe("#" + socialIcon.symbol);
+  }
 });
 
 test("generated assets and feeds are served with accurate MIME types", async ({ page, request }) => {
