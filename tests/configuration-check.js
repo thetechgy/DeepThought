@@ -7,6 +7,11 @@ const test = require("node:test");
 const zlib = require("node:zlib");
 
 const repositoryRoot = path.resolve(__dirname, "..");
+const primaryFontPreloadPattern = /<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="[^"]*\/fonts\/jost-latin-normal\.woff2")(?=[^>]*\bas="font")(?=[^>]*\btype="font\/woff2")(?=[^>]*\bcrossorigin(?:\s*=\s*(?:"anonymous"|'anonymous'|anonymous))?(?=\s|\/?>))[^>]*>/g;
+
+function findPrimaryFontPreloads(html) {
+  return [...html.matchAll(primaryFontPreloadPattern)];
+}
 
 function assertSyntaxStylesMatchContent(html, label) {
   const hasHighlightedCode = /<pre\b[^>]*\bclass="[^"]*\bgiallo\b[^"]*"/.test(html);
@@ -82,9 +87,7 @@ test("built-in templates preload the primary font and load syntax CSS only when 
     path.join(outputPath, "docs", "basic-markdown-syntax", "index.html"),
     "utf8"
   );
-  const fontPreloads = [...homepage.matchAll(
-    /<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="[^"]*\/fonts\/jost-latin-normal\.woff2")(?=[^>]*\bas="font")(?=[^>]*\btype="font\/woff2")(?=[^>]*\bcrossorigin(?:\s|\/?>))[^>]*>/g
-  )];
+  const fontPreloads = findPrimaryFontPreloads(homepage);
 
   assert.equal(fontPreloads.length, 1, "generated homepage must preload the primary font once");
   assertSyntaxStylesMatchContent(homepage, "generated homepage");
@@ -93,6 +96,37 @@ test("built-in templates preload the primary font and load syntax CSS only when 
     true,
     "generated code page must remain a positive highlighted-code fixture"
   );
+});
+
+test("the primary font preload accepts anonymous CORS syntax variants", () => {
+  const link = (crossorigin) => [
+    '<link rel="preload" href="/fonts/jost-latin-normal.woff2"',
+    `as="font" type="font/woff2" ${crossorigin} />`
+  ].join(" ");
+
+  for (const crossorigin of [
+    "crossorigin",
+    'crossorigin="anonymous"',
+    "crossorigin='anonymous'",
+    "crossorigin=anonymous"
+  ]) {
+    assert.equal(
+      findPrimaryFontPreloads(link(crossorigin)).length,
+      1,
+      `${crossorigin} must identify an anonymous CORS font preload`
+    );
+  }
+
+  for (const crossorigin of [
+    "",
+    'crossorigin="use-credentials"'
+  ]) {
+    assert.equal(
+      findPrimaryFontPreloads(link(crossorigin)).length,
+      0,
+      `${crossorigin || "missing crossorigin"} must not identify an anonymous CORS font preload`
+    );
+  }
 });
 
 test("an empty feed filename list omits the RSS link without failing the build", (t) => {
