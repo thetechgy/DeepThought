@@ -7,6 +7,26 @@ const test = require("node:test");
 const zlib = require("node:zlib");
 
 const repositoryRoot = path.resolve(__dirname, "..");
+const primaryFontPreloadPattern = /<link\b(?=[^>]*\brel="preload")(?=[^>]*\bhref="[^"]*\/fonts\/jost-latin-normal\.woff2")(?=[^>]*\bas="font")(?=[^>]*\btype="font\/woff2")(?=[^>]*\bcrossorigin(?:\s*=\s*(?:"anonymous"|'anonymous'|anonymous))?(?=\s|\/?>))[^>]*>/g;
+
+function findPrimaryFontPreloads(html) {
+  return [...html.matchAll(primaryFontPreloadPattern)];
+}
+
+function assertSyntaxStylesMatchContent(html, label) {
+  const hasHighlightedCode = /<pre\b[^>]*\bclass="[^"]*\bgiallo\b[^"]*"/.test(html);
+  const stylesheetIds = [...html.matchAll(
+    /<link\b[^>]*\bid="(giallo-(?:light|dark))"[^>]*>/g
+  )].map((match) => match[1]).sort();
+  const expectedIds = hasHighlightedCode ? ["giallo-dark", "giallo-light"] : [];
+
+  assert.deepEqual(
+    stylesheetIds,
+    expectedIds,
+    `${label} syntax stylesheets must match its rendered highlighted code`
+  );
+  return hasHighlightedCode;
+}
 
 function buildWithConfig(t, transformConfig = null) {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "deepthought-config-"));
@@ -51,13 +71,62 @@ test("the core stylesheet stays within its render-blocking transfer budget", (t)
   const gzipBytes = zlib.gzipSync(stylesheet).byteLength;
 
   assert.ok(
-    stylesheet.byteLength <= 120_000,
-    `deep-thought.css is ${stylesheet.byteLength} bytes; expected at most 120000`
+    stylesheet.byteLength <= 75_000,
+    `deep-thought.css is ${stylesheet.byteLength} bytes; expected at most 75000`
   );
   assert.ok(
-    gzipBytes <= 18_500,
-    `deep-thought.css is ${gzipBytes} gzip bytes; expected at most 18500`
+    gzipBytes <= 13_000,
+    `deep-thought.css is ${gzipBytes} gzip bytes; expected at most 13000`
   );
+});
+
+test("built-in templates preload the primary font and load syntax CSS only when needed", (t) => {
+  const outputPath = buildWithConfig(t);
+  const homepage = fs.readFileSync(path.join(outputPath, "index.html"), "utf8");
+  const codePage = fs.readFileSync(
+    path.join(outputPath, "docs", "basic-markdown-syntax", "index.html"),
+    "utf8"
+  );
+  const fontPreloads = findPrimaryFontPreloads(homepage);
+
+  assert.equal(fontPreloads.length, 1, "generated homepage must preload the primary font once");
+  assertSyntaxStylesMatchContent(homepage, "generated homepage");
+  assert.equal(
+    assertSyntaxStylesMatchContent(codePage, "generated code page"),
+    true,
+    "generated code page must remain a positive highlighted-code fixture"
+  );
+});
+
+test("the primary font preload accepts anonymous CORS syntax variants", () => {
+  const link = (crossorigin) => [
+    '<link rel="preload" href="/fonts/jost-latin-normal.woff2"',
+    `as="font" type="font/woff2" ${crossorigin} />`
+  ].join(" ");
+
+  for (const crossorigin of [
+    "crossorigin",
+    'crossorigin="anonymous"',
+    "crossorigin='anonymous'",
+    "crossorigin=anonymous"
+  ]) {
+    assert.equal(
+      findPrimaryFontPreloads(link(crossorigin)).length,
+      1,
+      `${crossorigin} must identify an anonymous CORS font preload`
+    );
+  }
+
+  for (const crossorigin of [
+    "",
+    'crossorigin="use-credentials"'
+  ]) {
+    assert.equal(
+      findPrimaryFontPreloads(link(crossorigin)).length,
+      0,
+      `${crossorigin || "missing crossorigin"} must not identify an anonymous CORS font preload`
+    );
+  }
 });
 
 test("an empty feed filename list omits the RSS link without failing the build", (t) => {
@@ -117,11 +186,15 @@ test("theme defaults apply before JavaScript and select matching highlighting", 
       `default = "${themeCase.configured}"`
     ));
     const homepage = fs.readFileSync(path.join(outputPath, "index.html"), "utf8");
+    const codePage = fs.readFileSync(
+      path.join(outputPath, "docs", "basic-markdown-syntax", "index.html"),
+      "utf8"
+    );
     const htmlTag = homepage.match(/<html[^>]*>/)?.[0];
-    const lightMedia = homepage.match(
+    const lightMedia = codePage.match(
       /<link id="giallo-light"[^>]*\bmedia="([^"]+)"/
     )?.[1];
-    const darkMedia = homepage.match(
+    const darkMedia = codePage.match(
       /<link id="giallo-dark"[^>]*\bmedia="([^"]+)"/
     )?.[1];
 

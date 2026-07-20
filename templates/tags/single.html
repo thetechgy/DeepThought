@@ -5,6 +5,21 @@
 {% block og_title %}Posts tagged {{ term.name }} | {{ config.title }}{% endblock og_title %}
 {% block og_description %}Browse posts tagged {{ term.name }} on {{ config.title }}.{% endblock og_description %}
 
+{% block syntax_stylesheets %}
+{% set_global has_syntax = false %}
+{% if paginator %}
+{% set syntax_pages = paginator.pages %}
+{% else %}
+{% set syntax_pages = term.pages %}
+{% endif %}
+{% for page in syntax_pages %}
+{% if page.summary and page.summary is containing('class="giallo') %}
+{% set_global has_syntax = true %}
+{% endif %}
+{% endfor %}
+{% if has_syntax %}{{ super() }}{% endif %}
+{% endblock syntax_stylesheets %}
+
 {% block header %}
 <header class='hero'>
   <div class='hero-body pb-0'>

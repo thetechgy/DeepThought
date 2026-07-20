@@ -28,7 +28,8 @@ Here is a WIP list of blocks in DeepThought templates to override:
 
 | Template location[^1] | Block | Description |
 | ------ | ----------- | -- |
-| `base.html` | `user_custom_stylesheet` | Custom stylesheet (css or saas) to fine-tune DeepThought styling |
+| `base.html` | `user_custom_stylesheet` | Custom stylesheet (CSS or Sass) to fine-tune DeepThought styling |
+| `base.html` | `syntax_stylesheets` | Control the generated light and dark syntax-highlighting stylesheets. Built-in templates load them only when rendered code is present; custom templates retain the default behavior unless they override this block. |
 | `base.html` | `title` | Customize default page's titles |
 | `base.html` | `analytics` | Provide your own analytics script. Google Analytics by default |
 | `base.html` | `header` | Customize page's header |
@@ -41,9 +42,10 @@ Here is a WIP list of blocks in DeepThought templates to override:
 
 ## Custom Bulma components
 
-DeepThought compiles only the Bulma modules used by its built-in templates.
-Custom templates that use additional Bulma components must include those
-component styles through `user_custom_stylesheet` or the site's Sass entry point.
+DeepThought compiles only the Bulma modules and exact utility classes used by its built-in
+templates. It is not a general Bulma distribution. Custom templates that use additional
+components or helpers must include those styles through `user_custom_stylesheet` or the site's
+Sass entry point.
 
 ---
 

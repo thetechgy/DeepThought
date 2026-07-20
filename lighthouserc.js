@@ -26,7 +26,8 @@ module.exports = {
         "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
         "total-blocking-time": ["error", { "maxNumericValue": 200 }],
-        "total-byte-weight": ["error", { "maxNumericValue": 256000 }]
+        "total-byte-weight": ["error", { "maxNumericValue": 256000 }],
+        "unused-css-rules": ["error", { "maxNumericValue": 100 }]
       }
     },
     upload: {

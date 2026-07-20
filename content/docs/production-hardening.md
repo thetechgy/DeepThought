@@ -10,12 +10,12 @@ origins to the policy.
 
 ## Baseline response headers
 
-For a site using only Cloudflare Web Analytics and privacy-enhanced YouTube/Vimeo embeds, start
-with these Cloudflare Pages headers:
+For a site using edge-only Cloudflare Zone Analytics and privacy-enhanced YouTube/Vimeo embeds,
+start with these Cloudflare Pages headers:
 
 ```text
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com https://player.vimeo.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com https://player.vimeo.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-site
   Permissions-Policy: camera=(), geolocation=(), microphone=()
@@ -32,8 +32,10 @@ integrations require additional script, style, image, connection, worker, or fra
 - Disable Rocket Loader so it does not rewrite first-party scripts.
 - Disable Bot Fight Mode for a static, unauthenticated site. Keep DDoS protection, Browser
   Integrity Check, and the managed WAF ruleset.
-- Disable automatic Web Analytics injection and set `extra.analytics.cloudflare_token` for the
-  manual beacon.
+- For the strictest policy, disable Cloudflare Web Analytics injection, leave
+  `extra.analytics.cloudflare_token` empty, and use the dashboard's edge-only Zone Analytics.
+  If browser-side Core Web Vitals are required, enable one Web Analytics integration deliberately
+  and add only its exact script and connection origins to the policy.
 - Do not set `Cache-Control: no-transform` globally. It prevents
   Cloudflare from applying Brotli or gzip compression to HTML, CSS, and JavaScript.
 - Do not create broad cache rules for mutable filenames. Use Pages defaults and immutable caching

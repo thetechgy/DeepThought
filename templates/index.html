@@ -3,6 +3,10 @@
 {% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
 {% block og_description %}{{ section.description | default(value=config.description) }}{% endblock og_description %}
 
+{% block syntax_stylesheets %}
+{% if section.content is containing('class="giallo') %}{{ super() }}{% endif %}
+{% endblock syntax_stylesheets %}
+
 {% block content %}
 <section class="section">
   <div class="container">
