@@ -8,6 +8,21 @@ const zlib = require("node:zlib");
 
 const repositoryRoot = path.resolve(__dirname, "..");
 
+function assertSyntaxStylesMatchContent(html, label) {
+  const hasHighlightedCode = /<pre\b[^>]*\bclass="[^"]*\bgiallo\b[^"]*"/.test(html);
+  const stylesheetIds = [...html.matchAll(
+    /<link\b[^>]*\bid="(giallo-(?:light|dark))"[^>]*>/g
+  )].map((match) => match[1]).sort();
+  const expectedIds = hasHighlightedCode ? ["giallo-dark", "giallo-light"] : [];
+
+  assert.deepEqual(
+    stylesheetIds,
+    expectedIds,
+    `${label} syntax stylesheets must match its rendered highlighted code`
+  );
+  return hasHighlightedCode;
+}
+
 function buildWithConfig(t, transformConfig = null) {
   const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "deepthought-config-"));
   const configPath = path.join(temporaryRoot, "config.toml");
@@ -72,9 +87,12 @@ test("built-in templates preload the primary font and load syntax CSS only when 
   )];
 
   assert.equal(fontPreloads.length, 1, "generated homepage must preload the primary font once");
-  assert.doesNotMatch(homepage, /\bid="giallo-(?:light|dark)"/);
-  assert.match(codePage, /\bid="giallo-light"/);
-  assert.match(codePage, /\bid="giallo-dark"/);
+  assertSyntaxStylesMatchContent(homepage, "generated homepage");
+  assert.equal(
+    assertSyntaxStylesMatchContent(codePage, "generated code page"),
+    true,
+    "generated code page must remain a positive highlighted-code fixture"
+  );
 });
 
 test("an empty feed filename list omits the RSS link without failing the build", (t) => {
